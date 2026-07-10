@@ -9,6 +9,8 @@ private:
     vector<Song>songs;
     int nextId=1;
 public:
+    static vector<pair<int,int>>playlistSongs;
+    static vector<pair<int,int>>likedSongs;
     SongRepository();
     int save(const Song&input)override;
     bool remove(int id)override;

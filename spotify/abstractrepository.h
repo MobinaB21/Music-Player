@@ -9,7 +9,7 @@ public:
    virtual int save(const T&input)=0;
     virtual bool remove(int id)=0;
     virtual std::optional<T> search(int id)=0;
-    virtual ~AbstractRepository(){}
+    virtual ~AbstractRepository();
 };
 
 #endif // ABSTRACTREPOSITORY_H

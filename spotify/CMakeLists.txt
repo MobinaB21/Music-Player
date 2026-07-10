@@ -15,10 +15,14 @@ qt_add_executable(spotify
     playlist.h playlist.cpp
     album.h album.cpp
     song.h song.cpp
-    abstractrepository.h abstractrepository.cpp
+
     songrepository.h songrepository.cpp
     playlistrepository.h playlistrepository.cpp
     albumrepository.h albumrepository.cpp
+    accountrepository.h accountrepository.cpp
+    artistrepository.h artistrepository.cpp
+    abstractrepository.h
+    listenerrepository.h listenerrepository.cpp
 )
 
 target_link_libraries(spotify
