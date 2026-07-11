@@ -18,5 +18,5 @@ int Song::getSongId()const{return songId;}
 int Song::getArtistId()const{return artistId;}
 int Song::getAlbumId()const{return albumId;}
 string Song::getSongImage()const{return songImage;}
-
+void Song::setSongId(int id){ this->songId=id;}
 void Song::setSongImage(const string &songImage){this->songImage=songImage;}

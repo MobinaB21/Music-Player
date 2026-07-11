@@ -1,5 +1,6 @@
 #include "listenerrepository.h"
-
+#include<fstream>
+#include<sstream>
 ListenerRepository::ListenerRepository() {}
 int ListenerRepository::save(const Account&input)
 {
@@ -8,6 +9,7 @@ int ListenerRepository::save(const Account&input)
     {
         temp.setId(nextId++);
         listeners.push_back(temp);
+        saveToFile(temp);
         return temp.getId();
     }
     for(size_t i=0;i<listeners.size();i++)
@@ -91,4 +93,38 @@ void ListenerRepository::updateLiked(int listenerId,int songId,bool isLiked)
         if(index!=-1)songs.erase(songs.begin()+index);
     }
 }
+void ListenerRepository::saveToFile(const Account&input)
+{
+    ofstream file("listener.txt",ios::app);
+    if(file.is_open())
+    {
+        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
+    }
+    file.close();
+}
+void ListenerRepository::loadFromFile()
+{
+    ifstream file("listener.txt");
+    if(file.is_open())
+    {
+        string line;
+        while(getline(file,line))
+        {
+            if(line.empty())continue;
+            stringstream ss(line);
+            string name,username,biography,id,role,password;
+            getline(ss,name,'&');
+            getline(ss,username,'&');
+            getline(ss,biography,'&');
+            getline(ss,id,'&');
+            getline(ss,role,'&');
+            getline(ss,password,'&');
+            Account temp(name,username,biography,stoi(id),role,password);
+            listeners.push_back(temp);
+            if(stoi(id)>=nextId)nextId=stoi(id)+1;
+        }
+    }
+    file.close();
+}
+ ListenerRepository::~ListenerRepository(){}
 

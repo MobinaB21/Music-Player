@@ -20,6 +20,8 @@ public:
     vector<Song> getByArtist(int id);
     vector<Song> getByPlaylist(int id);
     vector<Song> getByLikedSongs(int id);
+    void saveToFile(const Song&input);
+    void loadFromFile();
 };
 
 #endif // SONGREPOSITORY_H

@@ -24,7 +24,7 @@ public:
     int getArtistId()const;
     int getAlbumId()const;
     string getSongImage()const;
-
+    void setSongId(int id);
     void setSongImage(const string &songImage);
 };
 

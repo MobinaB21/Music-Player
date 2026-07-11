@@ -17,6 +17,8 @@ public:
     optional<Account>searchByUserName(const string&userName)override;
     void updateLiked(int listenerId,int songId,bool isLiked);
     bool isLiked(int listenerId,int songId);
+    void saveToFile(const Account&input)override;
+    void loadFromFile()override;
     ~ListenerRepository()override;
 };
 

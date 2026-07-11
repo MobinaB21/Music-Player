@@ -10,6 +10,8 @@ public:
     bool remove(int id)override=0;
     optional<Account>search(int id)override=0;
     virtual optional<Account> searchByUserName(const string&userName)=0;
+    virtual void saveToFile(const Account&input)=0;
+    virtual void loadFromFile()=0;
     virtual ~AccountRepository();
 };
 

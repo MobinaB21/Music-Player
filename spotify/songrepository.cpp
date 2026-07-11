@@ -1,9 +1,19 @@
 #include "songrepository.h"
+#include<fstream>
+#include<sstream>
 vector<pair<int,int>>SongRepository::playlistSongs;
 vector<pair<int,int>>SongRepository::likedSongs;
-SongRepository::SongRepository() {}
+SongRepository::SongRepository() {loadFromFile();}
 int SongRepository::save(const Song&input)
 {
+    Song temp=input;
+    if(temp.getSongId()==0)
+    {
+        temp.setSongId(nextId++);
+        songs.push_back(temp);
+        saveToFile(temp);
+        return temp.getSongId();
+    }
     for(auto &s: songs)
     {
         if(s.getSongId()==input.getSongId())
@@ -99,4 +109,38 @@ vector<Song> SongRepository::getByLikedSongs(int id)
         }
     }
     return result;
+}
+void SongRepository::saveToFile(const Song&input)
+{
+    ofstream file("song.txt",ios::app);
+    if(file.is_open())
+    {
+        file<<input.getSongName()<<"&"<<input.getReleaseYear()<<"&"<<input.getGenre()<<"&"<<input.getAudioFile()<<"&"<<input.getSongId()<<"&"<<input.getArtistId()<<input.getAlbumId()<<"\n";
+    }
+    file.close();
+}
+void SongRepository::loadFromFile()
+{
+    ifstream file("artist.txt");
+    if(file.is_open())
+    {
+        string line;
+        while(getline(file,line))
+        {
+            if(line.empty())continue;
+            stringstream ss(line);
+            string songName,releaseYear,genre,audioFileName,songId,artistId,albumId;
+            getline(ss,songName,'&');
+            getline(ss,releaseYear,'&');
+            getline(ss,genre,'&');
+            getline(ss,audioFileName,'&');
+            getline(ss,songId,'&');
+            getline(ss,artistId,'&');
+             getline(ss,albumId,'&');
+            Song temp(songName,stoi(releaseYear),genre,audioFileName,stoi(songId),stoi(artistId),stoi(albumId));
+            songs.push_back(temp);
+            if(stoi(songId)>=nextId)nextId=stoi(songId)+1;
+        }
+    }
+    file.close();
 }

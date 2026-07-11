@@ -13,6 +13,8 @@ public:
     bool remove(int id)override;
     optional<Account>search(int id)override;
     optional<Account>searchByUserName(const string&userName)override;
+    void saveToFile(const Account&input)override;
+    void loadFromFile()override;
 };
 
 #endif // ARTISTREPOSITORY_H

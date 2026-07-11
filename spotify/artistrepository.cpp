@@ -1,5 +1,6 @@
 #include "artistrepository.h"
-
+#include<fstream>
+#include<sstream>
 ArtistRepository::ArtistRepository() {}
 int ArtistRepository::save(const Account&input)
 {
@@ -8,6 +9,7 @@ int ArtistRepository::save(const Account&input)
     {
         temp.setId(nextId++);
         artists.push_back(temp);
+        saveToFile(temp);
         return temp.getId();
     }
     for(size_t i=0;i<artists.size();i++)
@@ -48,4 +50,37 @@ optional<Account> ArtistRepository::searchByUserName(const string&userName)
         if(a.getUserName()==userName)return a;
     }
     return nullopt;
+}
+void ArtistRepository::saveToFile(const Account&input)
+{
+    ofstream file("artist.txt",ios::app);
+    if(file.is_open())
+    {
+        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
+    }
+    file.close();
+}
+void ArtistRepository::loadFromFile()
+{
+    ifstream file("artist.txt");
+    if(file.is_open())
+    {
+        string line;
+        while(getline(file,line))
+        {
+            if(line.empty())continue;
+            stringstream ss(line);
+            string name,username,biography,id,role,password;
+            getline(ss,name,'&');
+            getline(ss,username,'&');
+            getline(ss,biography,'&');
+            getline(ss,id,'&');
+            getline(ss,role,'&');
+            getline(ss,password,'&');
+            Account temp(name,username,biography,stoi(id),role,password);
+            artists.push_back(temp);
+            if(stoi(id)>=nextId)nextId=stoi(id)+1;
+        }
+    }
+    file.close();
 }
