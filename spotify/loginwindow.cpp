@@ -33,6 +33,7 @@ void LoginWindow::clickLoginButton()
             if(account->getRole()=="Artist")
             {
                 ArtistWindow *artWindow=new ArtistWindow();
+                artWindow->setLoginWindow(this);
                 artWindow->show();
             }
             else if(account->getRole()=="Listener")
@@ -60,15 +61,11 @@ LoginWindow::~LoginWindow()
 {
     delete ui;
 }
-
 void LoginWindow::on_pushButton_2_clicked()
 {
     this->clickLoginButton();
 }
-
-
 void LoginWindow::on_pushButton_clicked()
 {
     this->clickRegisterButton();
 }
-

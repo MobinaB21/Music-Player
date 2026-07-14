@@ -97,6 +97,13 @@ vector<Song> SongRepository::getByPlaylist(int id)
     }
     return result;
 }
+Song SongRepository::getByName(string name)
+{
+    for(auto&s:songs)
+    {
+        if(s.getSongName()==name)return s;
+    }
+}
 vector<Song> SongRepository::getByLikedSongs(int id)
 {
     vector<Song>result;
@@ -141,6 +148,25 @@ void SongRepository::loadFromFile()
             songs.push_back(temp);
             if(stoi(songId)>=nextId)nextId=stoi(songId)+1;
         }
+    }
+    file.close();
+}
+void SongRepository::removeFromFile(Song& target)
+{
+    for(auto it=songs.begin();it!=songs.end();it++)
+    {
+        if(it->getSongName()==target.getSongName() && it->getSongId()==target.getSongId())
+        {
+            songs.erase(it);
+            break;
+        }
+    }
+    ofstream file("song.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    for(auto&s:songs)
+    {
+        saveToFile(s);
     }
     file.close();
 }

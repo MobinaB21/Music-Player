@@ -217,6 +217,33 @@ font-weight: bold;
     <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>100</y>
+     <width>361</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>24</pointsize>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 italic  24pt &quot;Segoe UI&quot;;</string>
+   </property>
+   <property name="text">
+    <string>SPOTIFY MUSIC</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

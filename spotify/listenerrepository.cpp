@@ -1,7 +1,7 @@
 #include "listenerrepository.h"
 #include<fstream>
 #include<sstream>
-ListenerRepository::ListenerRepository() {}
+ListenerRepository::ListenerRepository() {ListenerRepository::loadFromFile();}
 int ListenerRepository::save(const Account&input)
 {
     Account temp=input;

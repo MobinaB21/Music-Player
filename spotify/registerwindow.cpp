@@ -3,6 +3,7 @@
 #include<QMessageBox>
 #include"artistrepository.h"
 #include"listenerrepository.h"
+#include"loginwindow.h"
 RegisterWindow::RegisterWindow(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::RegisterWindow)
@@ -43,5 +44,7 @@ void RegisterWindow::on_pushButtonOK_clicked()
 void RegisterWindow::on_pushButtonCancle_clicked()
 {
     this->close();
+    LoginWindow *lw;
+    lw->show();
 }
 

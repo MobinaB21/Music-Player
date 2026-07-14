@@ -1,7 +1,7 @@
 #include "artistrepository.h"
 #include<fstream>
 #include<sstream>
-ArtistRepository::ArtistRepository() {}
+ArtistRepository::ArtistRepository() {ArtistRepository::loadFromFile();}
 int ArtistRepository::save(const Account&input)
 {
     Account temp=input;
