@@ -26,9 +26,15 @@ private slots:
     void on_buttonAddmusic_clicked();
 
     void on_buttonDelete_clicked();
-    void on_listWidget_itemClicked(QListWidgetItem *item);
+    void on_listWidgetSongs_itemClicked(QListWidgetItem *item);
 
     void on_edit_clicked();
+
+    void on_buttonDelete_2_clicked();
+
+    void on_edit_2_clicked();
+
+    void on_buttonLogout_2_clicked();
 
 private:
     Ui::ArtistWindow *ui;

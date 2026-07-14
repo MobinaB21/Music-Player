@@ -11,3 +11,4 @@ int Album::getAlbumId()const{ return albumId;}
 int Album::getArtistId()const{return artistId;}
 string Album::getCover()const{return cover;}
 void Album::setCover(const string &cover){this->cover=cover;}
+void Album::setAlbumName(string name){albumName=name;}

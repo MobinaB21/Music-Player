@@ -31,5 +31,6 @@ void AddSongWindow::on_pushButton_3_clicked()
     Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId);
     SongRepository song;
     song.save(newSong);
+    song.saveToFile(newSong);
     this->close();
 }

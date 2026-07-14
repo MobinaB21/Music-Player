@@ -16,6 +16,7 @@ public:
     int getArtistId()const;
     string getCover()const;
     void setCover(const string &cover);
+    void setAlbumName(string name);
 };
 
 #endif // ALBUM_H

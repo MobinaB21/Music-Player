@@ -20,3 +20,7 @@ int Song::getAlbumId()const{return albumId;}
 string Song::getSongImage()const{return songImage;}
 void Song::setSongId(int id){ this->songId=id;}
 void Song::setSongImage(const string &songImage){this->songImage=songImage;}
+void Song::setSongName(string name){songName=name;}
+void Song::setReleaseYear(int year){releaseYear=year;}
+void Song::setGenre(string genre){this->genre=genre;}
+void Song::setAudioFileName(string audio){audioFileName=audio;}

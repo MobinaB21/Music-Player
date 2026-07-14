@@ -45,11 +45,11 @@ void LoginWindow::clickLoginButton()
         }
         else
         {
-            QMessageBox::warning(this,"Password is incorrect","warning");
+            QMessageBox::warning(this,"warning","Password is incorrect");
             ui->lineEdit_2->clear();
         }
     }
-    else QMessageBox::warning(this,"User not found","warning");
+    else QMessageBox::warning(this,"warning","User not found");
 }
 void LoginWindow::clickRegisterButton()
 {

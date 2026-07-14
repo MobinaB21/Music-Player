@@ -26,6 +26,10 @@ public:
     string getSongImage()const;
     void setSongId(int id);
     void setSongImage(const string &songImage);
+    void setSongName(string name);
+    void setReleaseYear(int year);
+    void setGenre(string genre);
+    void setAudioFileName(string audio);
 };
 
 #endif // SONG_H

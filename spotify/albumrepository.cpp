@@ -1,6 +1,7 @@
 #include "albumrepository.h"
-
-AlbumRepository::AlbumRepository() {}
+#include<fstream>
+#include<sstream>
+AlbumRepository::AlbumRepository() {loadFromFile();}
 int AlbumRepository::save(const Album&input)
 {
     for(auto &a:albumList)
@@ -42,4 +43,53 @@ vector<Album> AlbumRepository::albums(int artistId)
         if(a.getArtistId()==artistId)result.push_back(a);
     }
     return result;
+}
+void AlbumRepository::saveToFile(const Album&input)
+{
+    ofstream file("album.txt",ios::app);
+    if(file.is_open())
+    {
+        file<<input.getAlbumName()<<"&"<<input.getAlbumId()<<"&"<<input.getArtistId()<<"\n";
+    }
+    file.close();
+}
+void AlbumRepository::loadFromFile()
+{
+    ifstream file("album.txt");
+    if(file.is_open())
+    {
+        string line;
+        while(getline(file,line))
+        {
+            if(line.empty())continue;
+            stringstream ss(line);
+            string albumName,artistId,albumId;
+            getline(ss,albumName,'&');
+            getline(ss,albumId,'&');
+            getline(ss,artistId,'&');
+            Album temp(albumName,stoi(albumId),stoi(artistId));
+            albumList.push_back(temp);
+            if(stoi(albumId)>=nextId)nextId=stoi(albumId)+1;
+        }
+    }
+    file.close();
+}
+void AlbumRepository::removeFromFile(Album& target)
+{
+    for(auto it=albumList.begin();it!=albumList.end();it++)
+    {
+        if(it->getAlbumName()==target.getAlbumName() && it->getAlbumId()==target.getAlbumId())
+        {
+            albumList.erase(it);
+            break;
+        }
+    }
+    ofstream file("album.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    for(auto&s:albumList)
+    {
+        saveToFile(s);
+    }
+    file.close();
 }
