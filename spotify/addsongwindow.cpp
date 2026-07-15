@@ -23,7 +23,7 @@ void AddSongWindow::on_pushButton_3_clicked()
     QString genre=ui->lineGenre->text();
     QString releaseYear=ui->lineReleaseYear->text();
     int albumId=0;
-    if(name.isEmpty()||album.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty())
+    if(name.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty())
     {
         QMessageBox::warning(this,"Please fill all the lines","warning");
         return;

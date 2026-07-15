@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>812</height>
+    <width>1679</width>
+    <height>847</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,138 +18,6 @@
     background-color: #BEEBC3;
 }</string>
   </property>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>200</y>
-     <width>341</width>
-     <height>281</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgb(106, 106, 106);
-border-radius: 30px;
-color: white;</string>
-   </property>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>240</y>
-      <width>93</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-    background-color: #B8D96C; 
-    color: black;
-    border-radius: 5px;
-    padding: 5px;
-    font-weight: bold;
-}
-background-color: rgb(54, 255, 32);</string>
-    </property>
-    <property name="text">
-     <string>Register</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>240</y>
-      <width>93</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-    background-color: white;
-    color: black;
-    border-radius: 5px;
-    padding: 5px;
-font-weight: bold;
-}</string>
-    </property>
-    <property name="text">
-     <string>Log In</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>200</y>
-      <width>291</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout"/>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>40</y>
-      <width>291</width>
-      <height>164</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="styleSheet">
-        <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
-       </property>
-       <property name="text">
-        <string>UserName :</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="lineEdit_3">
-       <property name="styleSheet">
-        <string notr="true">QLineEdit {
-    background-color: white;
-    color: black;
-    border: 2px solid #ccc; 
-    border-radius: 5px; 
-    padding: 5px;
-}</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="styleSheet">
-        <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Password :</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="lineEdit_2">
-       <property name="styleSheet">
-        <string notr="true">QLineEdit {
-    background-color: white;
-    color: black;
-    border: 2px solid #ccc; 
-    border-radius: 5px; 
-    padding: 5px;
-}</string>
-       </property>
-       <property name="echoMode">
-        <enum>QLineEdit::EchoMode::Password</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
@@ -163,86 +31,241 @@ font-weight: bold;
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>169</y>
-     <width>541</width>
-     <height>21</height>
+     <x>-60</x>
+     <y>260</y>
+     <width>1850</width>
+     <height>198</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>14</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 700 italic 14pt &quot;Segoe UI&quot;;</string>
-   </property>
-   <property name="text">
-    <string>TAKING YOU BEYOND THE LIMITS OF YOUR LIFE</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>678</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(106, 106, 106);
+border-radius: 30px;
+color: white;</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="styleSheet">
+            <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>UserName :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_3">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    background-color: white;
+    color: black;
+    border: 2px solid #ccc; 
+    border-radius: 5px; 
+    padding: 5px;
+}</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="styleSheet">
+            <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
+           </property>
+           <property name="text">
+            <string>Password :</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_2">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    background-color: white;
+    color: black;
+    border: 2px solid #ccc; 
+    border-radius: 5px; 
+    padding: 5px;
+}</string>
+           </property>
+           <property name="echoMode">
+            <enum>QLineEdit::EchoMode::Password</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="pushButton">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #B8D96C; 
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+}
+background-color: rgb(54, 255, 32);</string>
+           </property>
+           <property name="text">
+            <string>Register</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>108</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+font-weight: bold;
+}</string>
+           </property>
+           <property name="text">
+            <string>Log In</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>888</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>100</y>
-     <width>361</width>
-     <height>41</height>
+     <x>-210</x>
+     <y>160</y>
+     <width>1934</width>
+     <height>95</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>24</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 700 italic  24pt &quot;Segoe UI&quot;;</string>
-   </property>
-   <property name="text">
-    <string>SPOTIFY MUSIC</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>100</y>
-     <width>361</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Segoe UI</family>
-     <pointsize>24</pointsize>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: 700 italic  24pt &quot;Segoe UI&quot;;</string>
-   </property>
-   <property name="text">
-    <string>SPOTIFY MUSIC</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <item>
+     <spacer name="horizontalSpacer_6">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>668</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>24</pointsize>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 700 italic  24pt &quot;Segoe UI&quot;;</string>
+        </property>
+        <property name="text">
+         <string>SPOTIFY MUSIC</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>14</pointsize>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 700 italic 14pt &quot;Segoe UI&quot;;</string>
+        </property>
+        <property name="text">
+         <string>TAKING YOU BEYOND THE LIMITS OF YOUR LIFE</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_7">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>728</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
