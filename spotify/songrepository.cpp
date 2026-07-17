@@ -3,7 +3,11 @@
 #include<sstream>
 vector<pair<int,int>>SongRepository::playlistSongs;
 vector<pair<int,int>>SongRepository::likedSongs;
-SongRepository::SongRepository() {loadFromFile();}
+ vector<Song>SongRepository::favorite;
+SongRepository::SongRepository() {
+    loadFromFile();
+    loadLikedSongsFromFile();
+}
 int SongRepository::save(const Song&input)
 {
     Song temp=input;
@@ -122,13 +126,13 @@ void SongRepository::saveToFile(const Song&input)
     ofstream file("song.txt",ios::app);
     if(file.is_open())
     {
-        file<<input.getSongName()<<"&"<<input.getReleaseYear()<<"&"<<input.getGenre()<<"&"<<input.getAudioFile()<<"&"<<input.getSongId()<<"&"<<input.getArtistId()<<input.getAlbumId()<<"\n";
+        file<<input.getSongName()<<"&"<<input.getReleaseYear()<<"&"<<input.getGenre()<<"&"<<input.getAudioFile()<<"&"<<input.getSongId()<<"&"<<input.getArtistId()<<"&"<<input.getAlbumId()<<"\n";
     }
     file.close();
 }
 void SongRepository::loadFromFile()
 {
-    ifstream file("artist.txt");
+    ifstream file("song.txt");
     if(file.is_open())
     {
         string line;
@@ -167,6 +171,74 @@ void SongRepository::removeFromFile(Song& target)
     for(auto&s:songs)
     {
         saveToFile(s);
+    }
+    file.close();
+}
+void SongRepository::saveLikedSongsToFile()
+{
+    ofstream file("likedSongs.txt", ios::out | ios::trunc);
+    if (file.is_open())
+    {
+        for (const auto& pair : likedSongs)
+        {
+            file << pair.first << "&" << pair.second << "\n";
+        }
+    }
+    file.close();
+}
+void SongRepository::loadLikedSongsFromFile()
+{
+    likedSongs.clear();
+    ifstream file("likedSongs.txt");
+    if (file.is_open())
+    {
+        string line;
+        while (getline(file, line))
+        {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            string userIdStr, songIdStr;
+            getline(ss, userIdStr, '&');
+            getline(ss, songIdStr, '&');
+            try
+            {
+                likedSongs.push_back({stoi(userIdStr), stoi(songIdStr)});
+            } catch (...) {}
+        }
+    }
+    file.close();
+}
+void SongRepository::savePlaylistSongsToFile()
+{
+    ofstream file("playlist_songs.txt", ios::out | ios::trunc);
+    if (file.is_open())
+    {
+        for (const auto& pair : playlistSongs)
+        {
+            file << pair.first << "&" << pair.second << "\n";
+        }
+    }
+    file.close();
+}
+void SongRepository::loadPlaylistSongsFromFile()
+{
+    playlistSongs.clear();
+    ifstream file("playlist_songs.txt");
+    if (file.is_open())
+    {
+        string line;
+        while (getline(file, line))
+        {
+            if (line.empty()) continue;
+            stringstream ss(line);
+            string playlistIdStr, songIdStr;
+            getline(ss, playlistIdStr, '&');
+            getline(ss, songIdStr, '&');
+            try
+            {
+                playlistSongs.push_back({stoi(playlistIdStr), stoi(songIdStr)});
+            } catch (...) {}
+        }
     }
     file.close();
 }

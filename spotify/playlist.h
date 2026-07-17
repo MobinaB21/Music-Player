@@ -7,14 +7,14 @@ class Playlist
 private:
     std::string name;
     int listenerId;
-    int playListId;
+    int playlistId;
 public:
-    Playlist(string name,int listenerId,int playListId );
+    Playlist(string name,int listenerId,int playlistId );
     string getName()const;
     int getListenerId()const;
-    int getPlayListId()const;
+    int getPlaylistId()const;
     void setListenerId(const int &id);
-    void setPlayListId(const int &playListId);
+    void setPlaylistId(const int &playListId);
 };
 
 #endif // PLAYLIST_H

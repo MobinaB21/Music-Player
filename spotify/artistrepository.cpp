@@ -51,6 +51,14 @@ optional<Account> ArtistRepository::searchByUserName(const string&userName)
     }
     return nullopt;
 }
+optional<Account> ArtistRepository::searchByName(string &name)
+{
+    for(auto&a:artists)
+    {
+        if(a.getFullName()==name)return a;
+    }
+    return nullopt;
+}
 void ArtistRepository::saveToFile(const Account&input)
 {
     ofstream file("artist.txt",ios::app);
@@ -68,19 +76,40 @@ void ArtistRepository::loadFromFile()
         string line;
         while(getline(file,line))
         {
-            if(line.empty())continue;
+            if(!line.empty() && line.back() == '\r') {
+                line.pop_back();
+            }
+            if(line.empty()) continue;
+
             stringstream ss(line);
-            string name,username,biography,id,role,password;
-            getline(ss,name,'&');
-            getline(ss,username,'&');
-            getline(ss,biography,'&');
-            getline(ss,id,'&');
-            getline(ss,role,'&');
-            getline(ss,password,'&');
-            Account temp(name,username,biography,stoi(id),role,password);
-            artists.push_back(temp);
-            if(stoi(id)>=nextId)nextId=stoi(id)+1;
+            string name, username, biography, id, role, password;
+
+            if (!getline(ss, name, '&')) continue;
+            if (!getline(ss, username, '&')) continue;
+            if (!getline(ss, biography, '&')) continue;
+            if (!getline(ss, id, '&')) continue;
+            if (!getline(ss, role, '&')) continue;
+            if (!getline(ss, password, '&')) continue;
+            try
+            {
+                int parsedId = stoi(id);
+                Account temp(name, username, biography, parsedId, role, password);
+                artists.push_back(temp);
+                if(parsedId >= nextId) nextId = parsedId + 1;
+            }
+            catch (const exception& e) {
+                continue;
+            }
         }
     }
     file.close();
 }
+int ArtistRepository::getIdByName(string name)
+{
+    for(auto&a:artists)
+    {
+        if(a.getFullName()==name)return a.getId();
+    }
+    return 0;
+}
+vector<Account> ArtistRepository::getArtists(){return artists;}

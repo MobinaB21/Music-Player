@@ -12,10 +12,11 @@ class ArtistWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit ArtistWindow(QWidget *parent = nullptr);
+    explicit ArtistWindow(int artistId,QWidget *parent = nullptr);
     void setLoginWindow(LoginWindow *lw);
     void refreshSongList();
     void refreshAlbumList();
+    void refreshSongsOfAlbum(int albumId);
     ~ArtistWindow();
 
 private slots:
@@ -35,6 +36,12 @@ private slots:
     void on_edit_2_clicked();
 
     void on_buttonLogout_2_clicked();
+
+    void on_listWidget_2_itemClicked(QListWidgetItem *item);
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::ArtistWindow *ui;

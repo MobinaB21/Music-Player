@@ -8,6 +8,7 @@ class PlaylistRepository :public AbstractRepository<Playlist>
 private:
     vector<Playlist>list;
     vector<pair<int,int>>playlistSongs;
+    int nextId=1;
 public:
     PlaylistRepository();
     int save(const Playlist &input)override;
@@ -16,6 +17,11 @@ public:
     void insertSong(int playlistId,int songId);
     void removeSong(int playlistId,int songId);
     vector<Playlist> playlists(int listenerId);
+    void saveToFile(Playlist&input);
+    void loadFromFile();
+    void removeFromFile(Playlist&target);
+    int getIdByName(string playlistName);
+
 };
 
 #endif // PLAYLISTREPOSITORY_H

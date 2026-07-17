@@ -4,12 +4,20 @@
 AlbumRepository::AlbumRepository() {loadFromFile();}
 int AlbumRepository::save(const Album&input)
 {
-    for(auto &a:albumList)
+    Album temp=input;
+    if(temp.getAlbumId()==0)
     {
-        if(a.getAlbumId()==input.getAlbumId())
+        temp.setAlbumId(nextId++);
+        albumList.push_back(temp);
+        saveToFile(temp);
+        return temp.getAlbumId();
+    }
+    for(auto &s: albumList)
+    {
+        if(s.getAlbumId()==input.getAlbumId())
         {
-            a=input;
-            return input.getAlbumId();
+            s=input;
+            return s.getAlbumId();
         }
     }
     albumList.push_back(input);
@@ -92,4 +100,12 @@ void AlbumRepository::removeFromFile(Album& target)
         saveToFile(s);
     }
     file.close();
+}
+int AlbumRepository::getIdByName(string name)
+{
+    for(auto&a:albumList)
+    {
+        if(a.getAlbumName()==name)return a.getAlbumId();
+    }
+    return 0;
 }

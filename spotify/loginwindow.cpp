@@ -6,13 +6,13 @@
 #include"artistwindow.h"
 #include"listenerwindow.h"
 #include"registerwindow.h"
-
+#include<QDebug>
 LoginWindow::LoginWindow(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
-
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 void LoginWindow::clickLoginButton()
 {
@@ -32,13 +32,14 @@ void LoginWindow::clickLoginButton()
         {
             if(account->getRole()=="Artist")
             {
-                ArtistWindow *artWindow=new ArtistWindow();
+                ArtistWindow *artWindow=new ArtistWindow(account->getId());
                 artWindow->setLoginWindow(this);
                 artWindow->show();
             }
             else if(account->getRole()=="Listener")
             {
-                ListenerWindow *listenWindow=new ListenerWindow();
+                ListenerWindow *listenWindow=new ListenerWindow(account->getId());
+                listenWindow->setLoginWindow(this);
                 listenWindow->show();
             }
             this->hide();

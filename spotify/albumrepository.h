@@ -17,6 +17,7 @@ public:
     void saveToFile(const Album&input);
     void removeFromFile(Album& target);
     void loadFromFile();
+    int getIdByName(string name);
 };
 
 #endif // ALBUMREPOSITORY_H

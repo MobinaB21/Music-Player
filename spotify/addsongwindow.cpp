@@ -3,6 +3,7 @@
 #include<QMessageBox>
 #include"song.h"
 #include"songrepository.h"
+#include"albumrepository.h"
 AddSongWindow::AddSongWindow(int id,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AddSongWindow)
@@ -22,7 +23,8 @@ void AddSongWindow::on_pushButton_3_clicked()
     QString audioFileName=ui->lineAudio->text();
     QString genre=ui->lineGenre->text();
     QString releaseYear=ui->lineReleaseYear->text();
-    int albumId=0;
+    AlbumRepository a;
+    int albumId=a.getIdByName(album.toStdString());
     if(name.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty())
     {
         QMessageBox::warning(this,"Please fill all the lines","warning");
@@ -31,6 +33,5 @@ void AddSongWindow::on_pushButton_3_clicked()
     Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId);
     SongRepository song;
     song.save(newSong);
-    song.saveToFile(newSong);
     this->close();
 }

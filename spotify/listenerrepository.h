@@ -19,6 +19,8 @@ public:
     bool isLiked(int listenerId,int songId);
     void saveToFile(const Account&input)override;
     void loadFromFile()override;
+    void removeFromFile(int id);
+    void updateListener(int listenerId,string& newUserName,string& newPassword);
     ~ListenerRepository()override;
 };
 

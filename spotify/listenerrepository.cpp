@@ -95,7 +95,7 @@ void ListenerRepository::updateLiked(int listenerId,int songId,bool isLiked)
 }
 void ListenerRepository::saveToFile(const Account&input)
 {
-    ofstream file("listener.txt",ios::app);
+    ofstream file("listener.txt",ios::out);
     if(file.is_open())
     {
         file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
@@ -110,21 +110,64 @@ void ListenerRepository::loadFromFile()
         string line;
         while(getline(file,line))
         {
-            if(line.empty())continue;
+            if(!line.empty() && line.back() == '\r') {
+                line.pop_back();
+            }
+            if(line.empty()) continue;
+
             stringstream ss(line);
-            string name,username,biography,id,role,password;
-            getline(ss,name,'&');
-            getline(ss,username,'&');
-            getline(ss,biography,'&');
-            getline(ss,id,'&');
-            getline(ss,role,'&');
-            getline(ss,password,'&');
-            Account temp(name,username,biography,stoi(id),role,password);
-            listeners.push_back(temp);
-            if(stoi(id)>=nextId)nextId=stoi(id)+1;
+            string name, username, biography, id, role, password;
+
+            if (!getline(ss, name, '&')) continue;
+            if (!getline(ss, username, '&')) continue;
+            if (!getline(ss, biography, '&')) continue;
+            if (!getline(ss, id, '&')) continue;
+            if (!getline(ss, role, '&')) continue;
+            if (!getline(ss, password, '&')) continue;
+
+            try {
+                int parsedId = stoi(id);
+                Account temp(name, username, biography, parsedId, role, password);
+                listeners.push_back(temp);
+                if(parsedId >= nextId) nextId = parsedId + 1;
+            }
+            catch (const exception& e) {
+                continue;
+            }
         }
     }
     file.close();
+}
+void ListenerRepository::removeFromFile(int id)
+{
+    for(auto it=listeners.begin();it!=listeners.end();it++)
+    {
+        if(it->getId()==id)
+        {
+            listeners.erase(it);
+            break;
+        }
+    }
+    ofstream file("listener.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    for(auto&l:listeners)
+    {
+        saveToFile(l);
+    }
+    file.close();
+}
+void ListenerRepository::updateListener(int listenerId,string& newUserName,string& newPassword)
+{
+    for(auto& l:listeners)
+    {
+        if(l.getId()==listenerId)
+        {
+            l.setUserName(newUserName);
+            l.setPassword(newPassword);
+            return;
+        }
+    }
 }
  ListenerRepository::~ListenerRepository(){}
 

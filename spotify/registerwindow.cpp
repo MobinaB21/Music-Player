@@ -9,6 +9,7 @@ RegisterWindow::RegisterWindow(QWidget *parent)
     , ui(new Ui::RegisterWindow)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose);
 }
 
 RegisterWindow::~RegisterWindow()
@@ -20,7 +21,7 @@ void RegisterWindow::on_pushButtonOK_clicked()
 {
     QString name=ui->lineEditName->text();
     QString username=ui->lineEditUserName->text();
-    QString password=ui->lineEditPassword->displayText();
+    QString password=ui->lineEditPassword->text();
     QString biography=ui->textEdit->toPlainText();
     QString role=ui->radioButtonArtist->isChecked()? "Artist":"Listener";
     if(name.isEmpty() || username.isEmpty() || password.isEmpty())
@@ -32,19 +33,21 @@ void RegisterWindow::on_pushButtonOK_clicked()
     ListenerRepository listener;
      if(artist.searchByUserName(username.toStdString())||listener.searchByUserName(username.toStdString()))
     {
-        QMessageBox::critical(this,"warning","this username was selected before");
-         return;
+        QMessageBox::critical(this,"warning","This username was selected before");
+        return;
      }
     Account account(name.toStdString(),username.toStdString(),biography.toStdString(),0,role.toStdString(),password.toStdString());
     if(role=="Artist")artist.save(account);
     else listener.save(account);
     QMessageBox::information(this,"Register","Successfully added");
     this->close();
+    LoginWindow *lw=new LoginWindow();
+    lw->show();
 }
 void RegisterWindow::on_pushButtonCancle_clicked()
 {
     this->close();
-    LoginWindow *lw;
+    LoginWindow *lw= new LoginWindow();
     lw->show();
 }
 

@@ -11,6 +11,7 @@ private:
 public:
     static vector<pair<int,int>>playlistSongs;
     static vector<pair<int,int>>likedSongs;
+    static vector<Song>favorite;
     SongRepository();
     int save(const Song&input)override;
     bool remove(int id)override;
@@ -24,6 +25,10 @@ public:
     void saveToFile(const Song&input);
     void loadFromFile();
     void removeFromFile(Song& target);
+    static void saveLikedSongsToFile();
+    static void loadLikedSongsFromFile();
+    static void savePlaylistSongsToFile();
+    static void loadPlaylistSongsFromFile();
 };
 
 #endif // SONGREPOSITORY_H

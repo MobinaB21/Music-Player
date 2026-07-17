@@ -28,8 +28,6 @@ void AddAlbumWindow::on_pushButton_clicked()
     Album newAlbum(name.toStdString(),0,artistId);
     AlbumRepository album;
     album.save(newAlbum);
-    album.saveToFile(newAlbum);
     this->close();
-
 }
 

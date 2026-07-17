@@ -1,13 +1,14 @@
 #include "playlist.h"
 
-Playlist::Playlist(string name,int listenerId,int playListId)
+Playlist::Playlist(string name,int listenerId,int playlistId)
 {
     this->name=name;
     this->listenerId=listenerId;
-    this->playListId=playListId;
+    this->playlistId=playlistId;
 }
 string Playlist::getName()const { return name;}
 int Playlist::getListenerId()const{return listenerId;}
-int Playlist::getPlayListId()const{return playListId;}
+int Playlist::getPlaylistId()const{return playlistId;}
 void Playlist::setListenerId(const int &listenerId){this->listenerId=listenerId;}
-void Playlist::setPlayListId(const int &playListId){this->playListId=playListId;}
+void Playlist::setPlaylistId(const int &playlistId){this->playlistId=playlistId;}
+
