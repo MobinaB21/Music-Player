@@ -28,12 +28,12 @@
    <property name="styleSheet">
     <string notr="true">background-color: rgb(255, 255, 255);</string>
    </property>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>121</width>
+      <x>20</x>
+      <y>20</y>
+      <width>371</width>
       <height>20</height>
      </rect>
     </property>
@@ -41,10 +41,10 @@
      <string notr="true">font: 700 italic 10pt &quot;Segoe UI&quot;;</string>
     </property>
     <property name="text">
-     <string>welcome back</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineSearch">
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -57,7 +57,7 @@
      <string notr="true">background-color: rgb(207, 207, 207);</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButtonSearch">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -83,8 +83,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>60</y>
+      <x>20</x>
+      <y>50</y>
       <width>831</width>
       <height>581</height>
      </rect>
@@ -345,6 +345,23 @@ background-color: rgb(185, 255, 205);</string>
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButtonEditPlaylistName">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>F:/screan shots/Screenshot 2026-07-11 215453.png</normaloff>F:/screan shots/Screenshot 2026-07-11 215453.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>40</width>
+           <height>40</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButtonDelete">
          <property name="text">
           <string/>
@@ -440,8 +457,8 @@ background-color: rgb(185, 255, 205);</string>
      <widget class="QLabel" name="label_9">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>100</y>
+        <x>30</x>
+        <y>160</y>
         <width>151</width>
         <height>20</height>
        </rect>
@@ -456,8 +473,8 @@ background-color: rgb(185, 255, 205);</string>
      <widget class="QLineEdit" name="lineEditUsername">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>130</y>
+        <x>30</x>
+        <y>190</y>
         <width>281</width>
         <height>26</height>
        </rect>
@@ -470,7 +487,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>230</y>
+        <y>250</y>
         <width>141</width>
         <height>20</height>
        </rect>
@@ -485,8 +502,8 @@ background-color: rgb(185, 255, 205);</string>
      <widget class="QLineEdit" name="lineEditPassword">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>260</y>
+        <x>30</x>
+        <y>280</y>
         <width>281</width>
         <height>26</height>
        </rect>
@@ -501,8 +518,8 @@ background-color: rgb(185, 255, 205);</string>
      <widget class="QPushButton" name="pushButtonEdit">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>390</y>
+        <x>170</x>
+        <y>510</y>
         <width>151</width>
         <height>29</height>
        </rect>
@@ -518,8 +535,8 @@ background-color: rgb(89, 197, 143);</string>
      <widget class="QPushButton" name="pushButtonDelete_2">
       <property name="geometry">
        <rect>
-        <x>540</x>
-        <y>110</y>
+        <x>500</x>
+        <y>90</y>
         <width>251</width>
         <height>29</height>
        </rect>
@@ -532,7 +549,91 @@ background-color: rgb(218, 30, 30);</string>
        <string>Delete </string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 700 italic 10pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>New Name :</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditName">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>100</y>
+        <width>281</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(207, 207, 207);</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>350</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 700 italic 10pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Biography :</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>380</y>
+        <width>281</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(207, 207, 207);</string>
+      </property>
+     </widget>
     </widget>
+   </widget>
+   <widget class="QComboBox" name="comboGenreFilter">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>20</y>
+      <width>76</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboYearFilter">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>20</y>
+      <width>76</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
    </widget>
   </widget>
  </widget>

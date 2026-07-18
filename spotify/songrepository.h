@@ -21,6 +21,7 @@ public:
     vector<Song> getByArtist(int id);
     vector<Song> getByPlaylist(int id);
     vector<Song> getByLikedSongs(int id);
+    vector<Song>getAllSongs();
     Song getByName(string name);
     void saveToFile(const Song&input);
     void loadFromFile();
@@ -29,6 +30,8 @@ public:
     static void loadLikedSongsFromFile();
     static void savePlaylistSongsToFile();
     static void loadPlaylistSongsFromFile();
+    void removeLikedSongsFromFile(int listenerId);
+    void removePlaylistSongsFromFile(int playlistId);
 };
 
 #endif // SONGREPOSITORY_H

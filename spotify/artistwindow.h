@@ -43,6 +43,12 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButtonEdit_clicked();
+
+    void on_pushButtonDelete_2_clicked();
+
+    void filterSongs();
+
 private:
     Ui::ArtistWindow *ui;
     LoginWindow *login;

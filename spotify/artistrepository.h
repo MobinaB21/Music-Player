@@ -16,7 +16,9 @@ public:
     optional<Account>searchByName(string&name);
     void saveToFile(const Account&input)override;
     void loadFromFile()override;
+    void removeFromFile(int id);
     int getIdByName(string name);
+    void updateArtist(int listenerId,string&name,string& newUserName,string& newPassword,string &biograghy);
     vector<Account> getArtists();
 };
 

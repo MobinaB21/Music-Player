@@ -14,6 +14,16 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
 
 {
     ui->setupUi(this);
+    ui->comboGenreFilter->addItem("All");
+     ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical"});
+     ui->comboYearFilter->addItem("All");
+    for(int year=2026;year>=0;year--)
+    {
+         ui->comboYearFilter->addItem(QString::number(year));
+    }
+    connect(ui->lineSearch, &QLineEdit::textChanged, this, &ListenerWindow::filterSongs);
+    connect(ui->comboGenreFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterSongs);
+    connect(ui->comboYearFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterSongs);
     setAttribute(Qt::WA_DeleteOnClose);
     this->listenerId=listenerId;
     SongRepository::favorite.clear();
@@ -33,6 +43,9 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     loadPlaylists();
     connect(ui->listWidgetArtists, &QListWidget::itemClicked, this, &ListenerWindow::on_listWidgetArtists_itemClicked);
     connect(ui->listWidgetAlbums, &QListWidget::itemClicked, this, &ListenerWindow::on_listWidgetAlbums_itemClicked);
+    ListenerRepository tempListener;
+    auto listener=tempListener.search(listenerId);
+    ui->lblName->setText("Welcom back "+QString::fromStdString(listener.value().getFullName()));
 }
 ListenerWindow::~ListenerWindow()
 {
@@ -302,14 +315,26 @@ void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
 {
     ui->listWidgetMusic->clear();
     QString itemName=item->text();
+    vector<string>favoriteSongNames;
     if(itemName=="Favorites")
     {
         for(auto&f:SongRepository::favorite)
         {
-            ui->listWidgetMusic->addItem(QString::fromStdString(f.getSongName()));
+            favoriteSongNames.push_back(f.getSongName());
+        }
+        sort(favoriteSongNames.begin(), favoriteSongNames.end(), [](const string& a, const string& b) {
+            string str1 = a, str2 = b;
+            transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
+            transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+            return str1 < str2;
+        });
+        for(auto&f:favoriteSongNames)
+        {
+            ui->listWidgetMusic->addItem(QString::fromStdString(f));
         }
         return;
     }
+     vector<string>songNames;
     PlaylistRepository temp;
     int playlistId=temp.getIdByName(itemName.toStdString());
     if(playlistId==-1)return;
@@ -319,7 +344,6 @@ void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
         if(p.first==playlistId)songId.push_back(p.second);
     }
     SongRepository temp2;
-    vector<string>songNames;
     for(auto&s:songId)
     {
         auto target=temp2.search(s);
@@ -405,22 +429,27 @@ void ListenerWindow::on_pushButtonDeleteMusic_clicked()
 }
 void ListenerWindow::on_pushButtonEdit_clicked()
 {
+    QString name=ui->lineEditName->text();
     QString userName=ui->lineEditUsername->text();
     QString password=ui->lineEditPassword->text();
+    QString biography=ui->textEdit->toPlainText();
+    string name2=name.toStdString();
     string userName2=userName.toStdString();
     string password2=password.toStdString();
-      ListenerRepository temp;
-    if(userName.isEmpty() || password.isEmpty() )
+    string biography2=biography.toStdString();
+    ListenerRepository temp;
+    if(userName.isEmpty() || password.isEmpty() || name.isEmpty() || biography.isEmpty() )
     {
         QMessageBox::warning(this,"Error","Please fill the lines");
         return;
     }
-    if(temp.searchByUserName(userName2))
+    auto find=temp.searchByUserName(userName2);
+    if(find)
     {
         QMessageBox::critical(this,"warning","This username was selected before");
         return;
     }
-    temp.updateListener(this->listenerId,userName2,password2);
+    temp.updateListener(this->listenerId,name2,userName2,password2,biography2);
     auto it=temp.search(this->listenerId);
     temp.saveToFile(it.value());
     QMessageBox::information(this,"Success","Account updated successfully");
@@ -431,6 +460,15 @@ void ListenerWindow::on_pushButtonDelete_2_clicked()
     reply=QMessageBox::question(this,"Delete Account","Do you want to delete your account ?",QMessageBox::Yes | QMessageBox::No);
     if(reply==QMessageBox::No)return;
     ListenerRepository temp;
+    PlaylistRepository tempPlaylist;
+    SongRepository tempSong;
+    vector<Playlist>playlists=tempPlaylist.playlists(this->listenerId);
+    for(auto&p:playlists)
+    {
+        tempPlaylist.removeFromFile(p);
+        tempSong.removePlaylistSongsFromFile(p.getPlaylistId());
+    }
+    tempSong.removeLikedSongsFromFile(this->listenerId);
     temp.removeFromFile(this->listenerId);
     QMessageBox::information(this,"Delete Account","Your account was deleted successfully");
     if(login)
@@ -439,3 +477,80 @@ void ListenerWindow::on_pushButtonDelete_2_clicked()
     }
     this->close();
 }
+
+void ListenerWindow::on_pushButtonEditPlaylistName_clicked()
+{
+    PlaylistRepository tempPlaylist;
+    vector<Playlist>allPlaylists=tempPlaylist.playlists(this->listenerId);
+    QListWidgetItem *item=ui->listWidgetPlaylist->currentItem();
+    if(!item)
+    {
+        QMessageBox::warning(this,"Warning","Please select one of the playlists");
+        return;
+    }
+    QString oldName=item->text();
+    int playlistId=tempPlaylist.getIdByName(oldName.toStdString());
+    if(oldName=="Favorites")
+    {
+        QMessageBox::warning(this,"Error","You cant change the name of this playlist");
+        return;
+    }
+    bool ok;
+    QString newName=QInputDialog::getText(this,"Edit Playlist Name","Enter the new name",QLineEdit::Normal,oldName,&ok);
+    string newName2=newName.toStdString();
+    if(newName=="Favorites")
+    {
+        QMessageBox::warning(this,"Error","You cant select this name");
+        return;
+    }
+    for(auto&a:allPlaylists)
+    {
+        if(a.getName()==newName2)
+        {
+            QMessageBox::warning(this,"Error","This name was selected before");
+            return;
+        }
+    }
+    if(ok && !newName.isEmpty())
+    {
+        tempPlaylist.updateName( playlistId,newName2);
+        auto it=tempPlaylist.search(playlistId);
+        tempPlaylist.saveToFile(it.value());
+        loadPlaylists();
+        QMessageBox::information(this,"Success","Playlist was edited successfully");
+    }
+}
+void ListenerWindow::filterSongs()
+{
+    QString find=ui->lineSearch->text();
+    if(find.isEmpty())
+    {
+        ui->listWidget_3->clear();
+        return;
+    }
+    SongRepository tempSong;
+    vector<Song>currentSongs=tempSong.getAllSongs();
+    ui->listWidget_3->clear();
+    QString searchText = ui->lineSearch->text().trimmed();
+    QString selectedGenre = ui->comboGenreFilter->currentText();
+    QString selectedYear = ui->comboYearFilter->currentText();
+    for (const auto& song : currentSongs)
+    {
+        QString songName = QString::fromStdString(song.getSongName());
+        QString songGenre = QString::fromStdString(song.getGenre());
+        QString songYear = QString::number(song.getReleaseYear());
+        bool matchesSearch = songName.contains(searchText, Qt::CaseInsensitive);
+        bool matchesGenre = (selectedGenre == "All" || songGenre == selectedGenre);
+        bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
+        if (matchesSearch && matchesGenre && matchesYear)
+        {
+            ui->listWidget_3->addItem(songName);
+        }
+    }
+}
+void ListenerWindow::on_pushButtonSearch_clicked()
+{
+
+    filterSongs();
+}
+

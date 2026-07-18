@@ -42,6 +42,12 @@ private slots:
 
     void on_pushButtonDelete_2_clicked();
 
+    void on_pushButtonEditPlaylistName_clicked();
+
+    void filterSongs();
+
+    void on_pushButtonSearch_clicked();
+
 private:
     Ui::ListenerWindow *ui;
     LoginWindow *login=nullptr;

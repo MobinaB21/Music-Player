@@ -21,6 +21,7 @@ public:
     void loadFromFile();
     void removeFromFile(Playlist&target);
     int getIdByName(string playlistName);
+    void updateName(int playlistId,string&newName);
 
 };
 

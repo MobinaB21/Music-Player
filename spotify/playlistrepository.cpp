@@ -76,7 +76,7 @@ vector<Playlist> PlaylistRepository::playlists(int listenerId)
 }
 void PlaylistRepository::saveToFile(Playlist&input)
 {
-    ofstream file("playlist.txt",ios::app);
+    ofstream file("playlist.txt",ios::out);
     if(file.is_open())
     {
         file<<input.getName()<<"&"<<input.getListenerId()<<"&"<<input.getPlaylistId()<<"\n";
@@ -143,4 +143,15 @@ int PlaylistRepository::getIdByName(string playlistName)
         if(l.getName()==playlistName)return l.getPlaylistId();
     }
     return -1;
+}
+void PlaylistRepository::updateName(int playlistId,string&newName)
+{
+    for(auto&l:list)
+    {
+        if(l.getPlaylistId()==playlistId)
+        {
+            l.setPlaylistName(newName);
+            break;
+        }
+    }
 }

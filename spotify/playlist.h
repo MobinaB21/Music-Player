@@ -15,6 +15,7 @@ public:
     int getPlaylistId()const;
     void setListenerId(const int &id);
     void setPlaylistId(const int &playListId);
+    void setPlaylistName(string&newName);
 };
 
 #endif // PLAYLIST_H

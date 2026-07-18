@@ -9,6 +9,7 @@
 #include "editsongwindow.h"
 #include<QListWidgetItem>
 #include"editalbumwindow.h"
+#include"artistrepository.h"
 ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ArtistWindow)
@@ -19,6 +20,19 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     connect(ui->listWidgetSongs, &QListWidget::itemClicked, this, &ArtistWindow::on_listWidgetSongs_itemClicked);
     refreshSongList();
     refreshAlbumList();
+    ui->comboGenreFilter->addItem("All");
+    ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical"});
+    ui->comboYearFilter->addItem("All");
+    for(int year=2026;year>=0;year--)
+    {
+        ui->comboYearFilter->addItem(QString::number(year));
+    }
+    connect(ui->lineSearch, &QLineEdit::textChanged, this, &ArtistWindow::filterSongs);
+    connect(ui->comboGenreFilter, &QComboBox::currentTextChanged, this, &ArtistWindow::filterSongs);
+    connect(ui->comboYearFilter, &QComboBox::currentTextChanged, this, &ArtistWindow::filterSongs);
+    ArtistRepository tempArtist;
+    auto artist=tempArtist.search(artistId);
+    ui->lblName->setText("Welcom back "+QString::fromStdString(artist.value().getFullName()));
 }
 ArtistWindow::~ArtistWindow()
 {
@@ -241,4 +255,84 @@ void ArtistWindow::on_pushButton_2_clicked()
     });
     editWin->show();
 }
-
+void ArtistWindow::on_pushButtonEdit_clicked()
+{
+    QString name=ui->lineEditName->text();
+    QString userName=ui->lineEditUsername->text();
+    QString password=ui->lineEditPassword->text();
+    QString biography=ui->textEdit->toPlainText();
+    string name2=name.toStdString();
+    string userName2=userName.toStdString();
+    string password2=password.toStdString();
+    string biography2=biography.toStdString();
+    ArtistRepository temp;
+    if(userName.isEmpty() || password.isEmpty() || name.isEmpty() || biography.isEmpty() )
+    {
+        QMessageBox::warning(this,"Error","Please fill the lines");
+        return;
+    }
+    auto find=temp.searchByUserName(userName2);
+    if(find)
+    {
+        QMessageBox::critical(this,"warning","This username was selected before");
+        return;
+    }
+    temp.updateArtist(this->artistId,name2,userName2,password2,biography2);
+    auto it=temp.search(this->artistId);
+    temp.saveToFile(it.value());
+    QMessageBox::information(this,"Success","Account updated successfully");
+}
+void ArtistWindow::on_pushButtonDelete_2_clicked()
+{
+    QMessageBox::StandardButton reply;
+    reply=QMessageBox::question(this,"Delete Account","Do you want to delete your account ?",QMessageBox::Yes | QMessageBox::No);
+    if(reply==QMessageBox::No)return;
+    ArtistRepository temp;
+    AlbumRepository tempAlbum;
+    SongRepository tempSong;
+    vector<Song>songs=tempSong.getByArtist(this->artistId);
+    vector<Album>albums=tempAlbum.albums(this->artistId);
+    for(auto&s:songs)
+    {
+        tempSong.removeFromFile(s);
+    }
+    for(auto&a:albums)
+    {
+        tempAlbum.removeFromFile(a);
+    }
+    temp.removeFromFile(this->artistId);
+    QMessageBox::information(this,"Delete Account","Your account was deleted successfully");
+    if(login)
+    {
+        login->show();
+    }
+    this->close();
+}
+void ArtistWindow::filterSongs()
+{
+    QString find=ui->lineSearch->text();
+    if(find.isEmpty())
+    {
+        ui->listWidgetSearch->clear();
+        return;
+    }
+    SongRepository tempSong;
+    vector<Song>currentSongs=tempSong.getByArtist(this->artistId);
+    ui->listWidgetSearch->clear();
+    QString searchText = ui->lineSearch->text().trimmed();
+    QString selectedGenre = ui->comboGenreFilter->currentText();
+    QString selectedYear = ui->comboYearFilter->currentText();
+    for (const auto& song : currentSongs)
+    {
+        QString songName = QString::fromStdString(song.getSongName());
+        QString songGenre = QString::fromStdString(song.getGenre());
+        QString songYear = QString::number(song.getReleaseYear());
+        bool matchesSearch = songName.contains(searchText, Qt::CaseInsensitive);
+        bool matchesGenre = (selectedGenre == "All" || songGenre == selectedGenre);
+        bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
+        if (matchesSearch && matchesGenre && matchesYear)
+        {
+            ui->listWidgetSearch->addItem(songName);
+        }
+    }
+}

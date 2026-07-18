@@ -61,7 +61,7 @@ optional<Account> ArtistRepository::searchByName(string &name)
 }
 void ArtistRepository::saveToFile(const Account&input)
 {
-    ofstream file("artist.txt",ios::app);
+    ofstream file("artist.txt",ios::out);
     if(file.is_open())
     {
         file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
@@ -104,6 +104,25 @@ void ArtistRepository::loadFromFile()
     }
     file.close();
 }
+void ArtistRepository::removeFromFile(int id)
+{
+    for(auto it=artists.begin();it!=artists.end();it++)
+    {
+        if(it->getId()==id)
+        {
+            artists.erase(it);
+            break;
+        }
+    }
+    ofstream file("artist.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    for(auto&a:artists)
+    {
+        saveToFile(a);
+    }
+    file.close();
+}
 int ArtistRepository::getIdByName(string name)
 {
     for(auto&a:artists)
@@ -111,5 +130,19 @@ int ArtistRepository::getIdByName(string name)
         if(a.getFullName()==name)return a.getId();
     }
     return 0;
+}
+void ArtistRepository::updateArtist(int listenerId,string&name,string& newUserName,string& newPassword,string&biography)
+{
+    for(auto& a:artists)
+    {
+        if(a.getId()==listenerId)
+        {
+            a.setFullName(name);
+            a.setUserName(newUserName);
+            a.setPassword(newPassword);
+            a.setBiography(biography);
+            return;
+        }
+    }
 }
 vector<Account> ArtistRepository::getArtists(){return artists;}

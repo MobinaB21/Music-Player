@@ -157,14 +157,16 @@ void ListenerRepository::removeFromFile(int id)
     }
     file.close();
 }
-void ListenerRepository::updateListener(int listenerId,string& newUserName,string& newPassword)
+void ListenerRepository::updateListener(int listenerId,string&name,string& newUserName,string& newPassword,string&biography)
 {
     for(auto& l:listeners)
     {
         if(l.getId()==listenerId)
         {
+            l.setFullName(name);
             l.setUserName(newUserName);
             l.setPassword(newPassword);
+            l.setBiography(biography);
             return;
         }
     }

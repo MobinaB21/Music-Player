@@ -186,6 +186,21 @@ void SongRepository::saveLikedSongsToFile()
     }
     file.close();
 }
+void SongRepository::removeLikedSongsFromFile(int listenerId)
+{
+    for(auto it=likedSongs.begin();it!=likedSongs.end();it++)
+    {
+        if(it->first==listenerId)
+        {
+            likedSongs.erase(it);
+        }
+    }
+    ofstream file("likedSongs.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    saveLikedSongsToFile();
+    file.close();
+}
 void SongRepository::loadLikedSongsFromFile()
 {
     likedSongs.clear();
@@ -242,3 +257,19 @@ void SongRepository::loadPlaylistSongsFromFile()
     }
     file.close();
 }
+void SongRepository::removePlaylistSongsFromFile(int playlistId)
+{
+    for(auto it=playlistSongs.begin();it!=playlistSongs.end();it++)
+    {
+        if(it->first==playlistId)
+        {
+            playlistSongs.erase(it);
+        }
+    }
+    ofstream file("playlist_songs.txt",ios::out | ios::trunc);
+    if(!file.is_open())return;
+    file.clear();
+    savePlaylistSongsToFile();
+    file.close();
+}
+vector<Song> SongRepository::getAllSongs() {return songs;}
