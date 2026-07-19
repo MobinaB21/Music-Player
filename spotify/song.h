@@ -30,6 +30,7 @@ public:
     void setReleaseYear(int year);
     void setGenre(string genre);
     void setAudioFileName(string audio);
+    void setAlbumId(int id);
 };
 
 #endif // SONG_H

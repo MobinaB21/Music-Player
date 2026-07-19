@@ -9,6 +9,7 @@ EditAlbumWindow::EditAlbumWindow(Album target,QWidget *parent)
     ,currentAlbum(target)
 {
     ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose);
     ui->lineEdit->setText(QString::fromStdString(currentAlbum.getAlbumName()));
 }
 

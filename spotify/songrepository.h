@@ -32,6 +32,7 @@ public:
     static void loadPlaylistSongsFromFile();
     void removeLikedSongsFromFile(int listenerId);
     void removePlaylistSongsFromFile(int playlistId);
+    optional<Song> getSongByName(string name);
 };
 
 #endif // SONGREPOSITORY_H

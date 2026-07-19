@@ -24,3 +24,4 @@ void Song::setSongName(string name){songName=name;}
 void Song::setReleaseYear(int year){releaseYear=year;}
 void Song::setGenre(string genre){this->genre=genre;}
 void Song::setAudioFileName(string audio){audioFileName=audio;}
+void Song::setAlbumId(int id){this->albumId=id;}

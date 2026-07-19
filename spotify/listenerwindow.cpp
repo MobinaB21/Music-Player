@@ -24,6 +24,9 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     connect(ui->lineSearch, &QLineEdit::textChanged, this, &ListenerWindow::filterSongs);
     connect(ui->comboGenreFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterSongs);
     connect(ui->comboYearFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterSongs);
+    connect(ui->lineSearch, &QLineEdit::textChanged, this, &ListenerWindow::filterMusics);
+    connect(ui->comboGenreFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterMusics);
+    connect(ui->comboYearFilter, &QComboBox::currentTextChanged, this, &ListenerWindow::filterMusics);
     setAttribute(Qt::WA_DeleteOnClose);
     this->listenerId=listenerId;
     SongRepository::favorite.clear();
@@ -57,15 +60,12 @@ void ListenerWindow::loadArtists()
     ui->listWidgetArtists->clear();
     ArtistRepository artist;
     vector<Account>allArtists=artist.getArtists();
-    sort(allArtists.begin(),allArtists.end(),[](const Account& a,const Account&b)
-        {
-        return a.getFullName()<b.getFullName();
-    });
     for(auto&a:allArtists)
     {
         QListWidgetItem *item=new QListWidgetItem(QString::fromStdString(a.getFullName()));
         ui->listWidgetArtists->addItem(item);
     }
+    ui->listWidgetArtists->sortItems(Qt::AscendingOrder);
 }
 void ListenerWindow::loadPlaylists()
 {
@@ -87,6 +87,7 @@ void ListenerWindow::loadPlaylists()
 }
 void ListenerWindow::on_pushButtonLike_clicked()
 {
+    SongRepository temp3;
     QListWidgetItem *selectedSong=ui->listWidget_3->currentItem();
     if(!selectedSong)
     {
@@ -95,7 +96,9 @@ void ListenerWindow::on_pushButtonLike_clicked()
     }
     QListWidgetItem *selectedArtist=ui->listWidgetArtists->currentItem();
     QListWidgetItem *selectedAlbum=ui->listWidgetAlbums->currentItem();
-    int row=ui->listWidget_3->row(selectedSong);
+    QString songName=selectedSong->text();
+    auto aim=temp3.getSongByName(songName.toStdString());
+    if(!aim.has_value())return;
     ArtistRepository temp1;
     QString artistName=selectedArtist->text();
     int artistId=temp1.getIdByName(artistName.toStdString());
@@ -103,16 +106,11 @@ void ListenerWindow::on_pushButtonLike_clicked()
     vector<Album>albumList=temp2.albums(artistId);
     QString albumName=selectedAlbum->text();
     int albumId=temp2.getIdByName(albumName.toStdString());
-    SongRepository temp3;
     vector<Song>songs=temp3.getByAlbum(albumId);
-    sort(songs.begin(),songs.end(),[]( Song&a,Song&b)
-         {
-             return a.getSongName()<b.getSongName();
-         });
-    Song aim=songs[row];
+    ui->listWidgetMusic->sortItems(Qt::AscendingOrder);
     int foundIndex = -1;
     for (size_t i = 0; i < SongRepository::likedSongs.size(); i++) {
-        if (SongRepository::likedSongs[i].first == this->listenerId && SongRepository::likedSongs[i].second == aim.getSongId()) {
+        if (SongRepository::likedSongs[i].first == this->listenerId && SongRepository::likedSongs[i].second == aim.value().getSongId()) {
             foundIndex = i;
             break;
         }
@@ -120,8 +118,8 @@ void ListenerWindow::on_pushButtonLike_clicked()
     if (foundIndex != -1)QMessageBox::information(this, "Favorites","You liked this song before");
     else
     {
-        SongRepository::likedSongs.push_back({this->listenerId, aim.getSongId()});
-        SongRepository::favorite.push_back(aim);
+        SongRepository::likedSongs.push_back({this->listenerId, aim.value().getSongId()});
+        SongRepository::favorite.push_back(aim.value());
         QMessageBox::information(this, "Favorites","Song added to favorites");
     }
 
@@ -141,6 +139,7 @@ void ListenerWindow::on_pushButtonLogout_clicked()
 }
 void ListenerWindow::on_pushButtonAddSong_clicked()
 {
+    SongRepository temp3;
     QListWidgetItem *selectedSong=ui->listWidget_3->currentItem();
     if(!selectedSong)
     {
@@ -149,7 +148,9 @@ void ListenerWindow::on_pushButtonAddSong_clicked()
     }
     QListWidgetItem *selectedArtist=ui->listWidgetArtists->currentItem();
     QListWidgetItem *selectedAlbum=ui->listWidgetAlbums->currentItem();
-    int row=ui->listWidget_3->row(selectedSong);
+    QString songName=selectedSong->text();
+    auto aim=temp3.getSongByName(songName.toStdString());
+    if(!aim.has_value())return;
     ArtistRepository temp1;
     QString artistName=selectedArtist->text();
     int artistId=temp1.getIdByName(artistName.toStdString());
@@ -157,16 +158,7 @@ void ListenerWindow::on_pushButtonAddSong_clicked()
     vector<Album>albumList=temp2.albums(artistId);
     QString albumName=selectedAlbum->text();
     int albumId=temp2.getIdByName(albumName.toStdString());
-    SongRepository temp3;
     vector<Song>songs=temp3.getByAlbum(albumId);
-    sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
-        string str1 = a.getSongName();
-        string str2 = b.getSongName();
-        transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-        transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-        return str1 < str2;
-    });
-    Song aim=songs[row];
     PlaylistRepository playlist;
     vector<Playlist>list=playlist.playlists(this->listenerId);
     if(list.empty())
@@ -177,7 +169,7 @@ void ListenerWindow::on_pushButtonAddSong_clicked()
     QStringList items;
     for(auto&p:list)
     {
-        if(p.getName()!="Favorit Songs")
+        if(p.getName()!="Favorites")
         {
             items<<QString::fromStdString(p.getName());
         }
@@ -195,7 +187,16 @@ void ListenerWindow::on_pushButtonAddSong_clicked()
                 break;
             }
         }
-        SongRepository::playlistSongs.push_back({id,aim.getSongId()});
+        vector<Song>selectedPlaylistSongs=temp3.getByPlaylist(id);
+        for(auto&s:selectedPlaylistSongs)
+        {
+            if(s.getSongName()==aim.value().getSongName())
+            {
+                QMessageBox::warning(this,"warning","You added this song to this playlist before");
+                return;
+            }
+        }
+        SongRepository::playlistSongs.push_back({id,aim.value().getSongId()});
         SongRepository::savePlaylistSongsToFile();
         QMessageBox::information(this,"information","Song added to playlist succussfully");
     }
@@ -219,16 +220,11 @@ void ListenerWindow::on_listWidgetArtists_itemClicked(QListWidgetItem *item)
     SongRepository song;
     vector<Song>singleSongs=song.singleSong(artistId);
     if(!singleSongs.empty())albumNames.push_back("Singles");
-    sort(albumNames.begin(), albumNames.end(), [](const string& a, const string& b) {
-        string str1 = a, str2 = b;
-        transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-        transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-        return str1 < str2;
-    });
     for(auto& a:albumNames)
     {
         ui->listWidgetAlbums->addItem(QString::fromStdString(a));
     }
+     ui->listWidgetAlbums->sortItems(Qt::AscendingOrder);
 }
 void ListenerWindow::on_listWidgetAlbums_itemClicked(QListWidgetItem *item)
 {
@@ -238,13 +234,19 @@ void ListenerWindow::on_listWidgetAlbums_itemClicked(QListWidgetItem *item)
     int albumId=album.getIdByName(albumName);
     SongRepository temp;
     vector<Song> songs=temp.getByAlbum(albumId);
-    sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
-        string str1 = a.getSongName();
-        string str2 = b.getSongName();
-        transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-        transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-        return str1 < str2;
-    });
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for(auto&s:songs)
     {
         ui->listWidget_3->addItem(QString::fromStdString(s.getSongName()));
@@ -314,27 +316,52 @@ void ListenerWindow::on_pushButtonDelete_clicked()
 void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
 {
     ui->listWidgetMusic->clear();
+    PlaylistRepository tempPlaylist;
+    SongRepository tempSong;
+    vector<Playlist>all=tempPlaylist.playlists(this->listenerId);
+    vector<Song>likedSongs=tempSong.getByLikedSongs(this->listenerId);
+    vector<Song>songs;
+    for(auto&l:likedSongs)
+    {
+        songs.push_back(l);
+    }
+    for(auto&a:all)
+    {
+        vector<Song>playlistSongs=tempSong.getByPlaylist(a.getPlaylistId());
+        for(auto&p:playlistSongs)
+        {
+            songs.push_back(p);
+        }
+        playlistSongs.clear();
+    }
+    ui->listWidgetMusic->clear();
     QString itemName=item->text();
-    vector<string>favoriteSongNames;
+    vector<Song>allSongs;
     if(itemName=="Favorites")
     {
         for(auto&f:SongRepository::favorite)
         {
-            favoriteSongNames.push_back(f.getSongName());
+            allSongs.push_back(f);
         }
-        sort(favoriteSongNames.begin(), favoriteSongNames.end(), [](const string& a, const string& b) {
-            string str1 = a, str2 = b;
-            transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-            transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-            return str1 < str2;
-        });
-        for(auto&f:favoriteSongNames)
+        QString sortCriteria = ui->comboSort->currentText();
+        if (sortCriteria == "Name")
         {
-            ui->listWidgetMusic->addItem(QString::fromStdString(f));
+            std::sort(allSongs.begin(), allSongs.end(), [](const Song& a, const Song& b) {
+                return a.getSongName() < b.getSongName();
+            });
+        }
+        else if (sortCriteria == "Year")
+        {
+            std::sort(allSongs.begin(), allSongs.end(), [](const Song& a, const Song& b) {
+                return a.getReleaseYear() > b.getReleaseYear();
+            });
+        }
+        for(auto&a:allSongs)
+        {
+            ui->listWidgetMusic->addItem(QString::fromStdString(a.getSongName()));
         }
         return;
     }
-     vector<string>songNames;
     PlaylistRepository temp;
     int playlistId=temp.getIdByName(itemName.toStdString());
     if(playlistId==-1)return;
@@ -347,17 +374,25 @@ void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
     for(auto&s:songId)
     {
         auto target=temp2.search(s);
-        songNames.push_back(target.value().getSongName());
+        if(!target.has_value())return;
+        allSongs.push_back(target.value());
     }
-    sort(songNames.begin(), songNames.end(), [](const string& a, const string& b) {
-        string str1 = a, str2 = b;
-        transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
-        transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
-        return str1 < str2;
-    });
-    for(auto&s:songNames)
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
     {
-        ui->listWidgetMusic->addItem(QString::fromStdString(s));
+        std::sort(allSongs.begin(), allSongs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(allSongs.begin(), allSongs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
+    for(auto&s:allSongs)
+    {
+        ui->listWidgetMusic->addItem(QString::fromStdString(s.getSongName()));
     }
 }
 void ListenerWindow::on_pushButtonDeleteMusic_clicked()
@@ -534,6 +569,19 @@ void ListenerWindow::filterSongs()
     QString searchText = ui->lineSearch->text().trimmed();
     QString selectedGenre = ui->comboGenreFilter->currentText();
     QString selectedYear = ui->comboYearFilter->currentText();
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for (const auto& song : currentSongs)
     {
         QString songName = QString::fromStdString(song.getSongName());
@@ -548,9 +596,80 @@ void ListenerWindow::filterSongs()
         }
     }
 }
+void ListenerWindow::filterMusics()
+{
+    QString find=ui->lineSearch->text();
+    if(find.isEmpty())
+    {
+        ui->listWidget_3->clear();
+        return;
+    }
+    PlaylistRepository tempPlaylist;
+    SongRepository tempSong;
+    vector<Playlist>all=tempPlaylist.playlists(this->listenerId);
+    vector<Song>likedSongs=tempSong.getByLikedSongs(this->listenerId);
+    vector<Song>currentSongs;
+    for(auto&l:likedSongs)
+    {
+        currentSongs.push_back(l);
+    }
+    for(auto&a:all)
+    {
+        vector<Song>playlistSongs=tempSong.getByPlaylist(a.getPlaylistId());
+        for(auto&p:playlistSongs)
+        {
+            bool addedBefore=false;
+            for(auto&c:currentSongs)
+            {
+                if(c.getSongName()==p.getSongName())addedBefore=true;
+            }
+            if(!addedBefore)currentSongs.push_back(p);
+        }
+        playlistSongs.clear();
+    }
+    ui->listWidgetMusic->clear();
+    QString searchText = ui->lineSearch->text().trimmed();
+    QString selectedGenre = ui->comboGenreFilter->currentText();
+    QString selectedYear = ui->comboYearFilter->currentText();
+    QString sortCriteria = ui->comboSort->currentText();
+
+    if (sortCriteria == "Name")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
+    for (const auto& song : currentSongs)
+    {
+        QString songName = QString::fromStdString(song.getSongName());
+        QString songGenre = QString::fromStdString(song.getGenre());
+        QString songYear = QString::number(song.getReleaseYear());
+        bool matchesSearch = songName.contains(searchText, Qt::CaseInsensitive);
+        bool matchesGenre = (selectedGenre == "All" || songGenre == selectedGenre);
+        bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
+        if (matchesSearch && matchesGenre && matchesYear)
+        {
+            ui->listWidgetMusic->addItem(songName);
+        }
+    }
+}
 void ListenerWindow::on_pushButtonSearch_clicked()
 {
 
     filterSongs();
+}
+void ListenerWindow::on_comboSort_currentIndexChanged(int index)
+{
+    filterSongs();
+    if (ui->listWidgetPlaylist->currentItem())
+    {
+        on_listWidgetPlaylist_itemClicked(ui->listWidgetPlaylist->currentItem());
+    }
 }
 

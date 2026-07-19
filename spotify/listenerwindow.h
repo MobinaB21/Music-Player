@@ -3,6 +3,8 @@
 #include"loginwindow.h"
 #include <QWidget>
 #include<QListWidget>
+#include<vector>
+#include"song.h"
 namespace Ui {
 class ListenerWindow;
 }
@@ -47,6 +49,10 @@ private slots:
     void filterSongs();
 
     void on_pushButtonSearch_clicked();
+
+    void on_comboSort_currentIndexChanged(int Index);
+
+    void filterMusics();
 
 private:
     Ui::ListenerWindow *ui;

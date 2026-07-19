@@ -49,7 +49,7 @@
      <rect>
       <x>680</x>
       <y>20</y>
-      <width>181</width>
+      <width>171</width>
       <height>26</height>
      </rect>
     </property>
@@ -83,7 +83,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>50</y>
       <width>831</width>
       <height>581</height>
@@ -634,6 +634,29 @@ background-color: rgb(218, 30, 30);</string>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(207, 207, 207);</string>
     </property>
+   </widget>
+   <widget class="QComboBox" name="comboSort">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>20</y>
+      <width>76</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Name</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Year</string>
+     </property>
+    </item>
    </widget>
   </widget>
  </widget>

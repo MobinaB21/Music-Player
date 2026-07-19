@@ -288,6 +288,9 @@ background-color: rgb(213, 213, 213);</string>
       <height>26</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
    </widget>
   </widget>
  </widget>

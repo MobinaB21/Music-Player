@@ -7,6 +7,7 @@ vector<pair<int,int>>SongRepository::likedSongs;
 SongRepository::SongRepository() {
     loadFromFile();
     loadLikedSongsFromFile();
+    loadPlaylistSongsFromFile();
 }
 int SongRepository::save(const Song&input)
 {
@@ -188,12 +189,13 @@ void SongRepository::saveLikedSongsToFile()
 }
 void SongRepository::removeLikedSongsFromFile(int listenerId)
 {
-    for(auto it=likedSongs.begin();it!=likedSongs.end();it++)
+    for(auto it=likedSongs.begin();it!=likedSongs.end();)
     {
         if(it->first==listenerId)
         {
-            likedSongs.erase(it);
+            it=likedSongs.erase(it);
         }
+        else it++;
     }
     ofstream file("likedSongs.txt",ios::out | ios::trunc);
     if(!file.is_open())return;
@@ -259,12 +261,13 @@ void SongRepository::loadPlaylistSongsFromFile()
 }
 void SongRepository::removePlaylistSongsFromFile(int playlistId)
 {
-    for(auto it=playlistSongs.begin();it!=playlistSongs.end();it++)
+    for(auto it=playlistSongs.begin();it!=playlistSongs.end();)
     {
         if(it->first==playlistId)
         {
-            playlistSongs.erase(it);
+            it= playlistSongs.erase(it);
         }
+        else it++;
     }
     ofstream file("playlist_songs.txt",ios::out | ios::trunc);
     if(!file.is_open())return;
@@ -273,3 +276,12 @@ void SongRepository::removePlaylistSongsFromFile(int playlistId)
     file.close();
 }
 vector<Song> SongRepository::getAllSongs() {return songs;}
+optional<Song> SongRepository::getSongByName(string name)
+{
+    for(auto&s:songs)
+    {
+
+        if(s.getSongName()==name)return s;
+    }
+    return nullopt;
+}

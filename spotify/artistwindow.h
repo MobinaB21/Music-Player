@@ -49,6 +49,8 @@ private slots:
 
     void filterSongs();
 
+    void on_comboSort_currentIndexChanged(int index);
+
 private:
     Ui::ArtistWindow *ui;
     LoginWindow *login;

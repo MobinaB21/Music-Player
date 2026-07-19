@@ -63,37 +63,43 @@ void ArtistWindow::on_buttonDelete_clicked()
     reply = QMessageBox::question(this, "Delete Album", "Do you want to delete this album?", QMessageBox::Yes | QMessageBox::No);
     if(reply == QMessageBox::Yes)
     {
-        int row = ui->listWidget_2->row(target);
+        QString targetName=target->text();
         AlbumRepository temp;
         vector<Album> albums = temp.albums(this->artistId);
         SongRepository tmp;
-        Album aim = albums[row];
-        vector<Song>albumSongs=tmp.getByAlbum(aim.getAlbumId());
-        temp.removeFromFile(aim);
+        int id=temp.getIdByName(targetName.toStdString());
+        auto aim=temp.search(id);
+        vector<Song>albumSongs=tmp.getByAlbum(aim.value().getAlbumId());
+        temp.removeFromFile(aim.value());
         for(auto&a:albumSongs)
         {
             tmp.removeFromFile(a);
         }
-        refreshSongsOfAlbum(aim.getAlbumId());
+        refreshSongsOfAlbum(aim.value().getAlbumId());
         refreshAlbumList();
     }
 }
 void ArtistWindow::on_edit_2_clicked()
 {
-    QMessageBox::information(this, "Edit Album", "Album editing feature can be implemented here!");
     QListWidgetItem *target = ui->listWidget_2->currentItem();
     if(!target)
     {
         QMessageBox::warning(this, "Warning", "Please select an album to edit.");
         return;
     }
-    int row = ui->listWidget_2->row(target);
+    QString albumName=target->text();
     AlbumRepository temp;
     vector<Album> albums = temp.albums(this->artistId);
-    Album aim = albums[row];
-    EditAlbumWindow *editWin = new EditAlbumWindow(aim, this);
-    connect(editWin, &EditAlbumWindow::destroyed, this, &ArtistWindow::refreshAlbumList);
+    int albumId=temp.getIdByName(albumName.toStdString());
+    auto aim=temp.search(albumId);
+    if(!aim.has_value())return;
+    EditAlbumWindow *editWin = new EditAlbumWindow(aim.value(), nullptr);
+    connect(editWin, &EditAlbumWindow::destroyed, this,[this](){
+    this->refreshAlbumList();
+    this->show();
+    });
     editWin->show();
+    this->hide();
 }
 void ArtistWindow::on_buttonLogout_2_clicked()
 {
@@ -108,12 +114,26 @@ void ArtistWindow::refreshAlbumList()
     {
         ui->listWidget_2->addItem(QString::fromStdString(a.getAlbumName()));
     }
+    ui->listWidget_2->sortItems(Qt::AscendingOrder);
 }
 void ArtistWindow::refreshSongsOfAlbum(int albumId)
 {
     ui->listWidget->clear();
     SongRepository temp;
     vector<Song>songs=temp.getByAlbum(albumId);
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for(auto&s:songs)
     {
         ui->listWidget->addItem(QString::fromStdString(s.getSongName()));
@@ -141,10 +161,10 @@ void ArtistWindow::on_buttonDelete_2_clicked()
     reply = QMessageBox::question(this, "Delete Song", "Do you want to delete this song?", QMessageBox::Yes | QMessageBox::No);
     if(reply == QMessageBox::Yes)
     {
-        int row = ui->listWidgetSongs->row(target);
         SongRepository temp;
+        QString targetName=target->text();
+        Song aim=temp.getByName(targetName.toStdString());
         vector<Song> songs = temp.singleSong(this->artistId);
-        Song aim = songs[row];
         temp.removeFromFile(aim);
         refreshSongList();
     }
@@ -157,13 +177,17 @@ void ArtistWindow::on_edit_clicked()
         QMessageBox::warning(this, "Warning", "Please select a song to edit.");
         return;
     }
-    int row = ui->listWidgetSongs->row(target);
     SongRepository temp;
+    QString targetName=target->text();
+    Song aim=temp.getByName(targetName.toStdString());
     vector<Song> songs = temp.singleSong(this->artistId);
-    Song aim = songs[row];
-    EditSongWindow *editWin = new EditSongWindow(aim, this);
-    connect(editWin, &EditSongWindow::destroyed, this, &ArtistWindow::refreshSongList);
+    EditSongWindow *editWin = new EditSongWindow(this->artistId,aim, nullptr);
+    connect(editWin, &EditSongWindow::destroyed, this,[this](){
+        this->refreshSongList();
+        this->show();
+    });
     editWin->show();
+    this->hide();
 }
 void ArtistWindow::on_listWidgetSongs_itemClicked(QListWidgetItem *item)
 {
@@ -178,6 +202,19 @@ void ArtistWindow::refreshSongList()
     ui->listWidgetSongs->clear();
     SongRepository temp;
     vector<Song> songs = temp.singleSong(this->artistId);
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for(const auto& song : songs)
     {
         ui->listWidgetSongs->addItem(QString::fromStdString(song.getSongName()));
@@ -199,6 +236,19 @@ void ArtistWindow::on_listWidget_2_itemClicked(QListWidgetItem *item)
     ui->listWidget->clear();
     SongRepository tempSong;
     vector<Song> songs = tempSong.getByAlbum(albumId);
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(songs.begin(), songs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for(const auto& song : songs)
     {
         QListWidgetItem *songItem = new QListWidgetItem(QString::fromStdString(song.getSongName()));
@@ -218,17 +268,19 @@ void ArtistWindow::on_pushButton_clicked()
     reply = QMessageBox::question(this, "Delete Song", "Do you want to delete this song?", QMessageBox::Yes | QMessageBox::No);
     if(reply == QMessageBox::Yes)
     {
-        QListWidgetItem * tmp=ui->listWidget_2->currentItem();
-        int id=ui->listWidget_2->row(tmp);
-        AlbumRepository album;
-        vector<Album>albums=album.albums(this->artistId);
-        Album a=albums[id];
-        int row = ui->listWidget->row(target);
-        SongRepository temp;
-        vector<Song> songs = temp.getByAlbum(a.getAlbumId());
-        Song aim = songs[row];
-        temp.removeFromFile(aim);
-        refreshSongsOfAlbum(a.getAlbumId());
+        AlbumRepository tempAlbum;
+        QListWidgetItem * selectedAlbum=ui->listWidget_2->currentItem();
+        QString selectedAlbumName=selectedAlbum->text();
+        int albumId=tempAlbum.getIdByName(selectedAlbumName.toStdString());
+        vector<Album>albums=tempAlbum.albums(this->artistId);
+        auto selected=tempAlbum.search(albumId);
+        if(!selected.has_value())return;
+        SongRepository tempSong;
+        QString songName=target->text();
+        Song aim=tempSong.getByName(songName.toStdString());
+        vector<Song> songs = tempSong.getByAlbum(selected.value().getAlbumId());
+        tempSong.removeFromFile(aim);
+        refreshSongsOfAlbum(selected.value().getAlbumId());
     }
 }
 void ArtistWindow::on_pushButton_2_clicked()
@@ -239,21 +291,24 @@ void ArtistWindow::on_pushButton_2_clicked()
         QMessageBox::warning(this, "Warning", "Please select a song to edit.");
         return;
     }
+     AlbumRepository album;
     QListWidgetItem *selectAlbum=ui->listWidget_2->currentItem();
-    int id=ui->listWidget_2->row(selectAlbum);
-    AlbumRepository album;
+    QString selectedAlbumName=selectAlbum->text();
+    int albumId=album.getIdByName(selectedAlbumName.toStdString());
     vector<Album>albums=album.albums(this->artistId);
-    Album a=albums[id];
-    int albumId=a.getAlbumId();
-    int row = ui->listWidget->row(target);
+    auto selected=album.search(albumId);
     SongRepository temp;
+    QString targetName=target->text();
+    Song aim=temp.getByName(targetName.toStdString());
     vector<Song> songs = temp.getByAlbum(albumId);
-    Song aim = songs[row];
-    EditSongWindow *editWin = new EditSongWindow(aim, this);
+    EditSongWindow *editWin = new EditSongWindow(this->artistId,aim, nullptr);
     connect(editWin, &EditSongWindow::destroyed, this, [this, albumId]() {
         this->refreshSongsOfAlbum(albumId);
+        refreshSongList();
+        this->show();
     });
     editWin->show();
+    this->hide();
 }
 void ArtistWindow::on_pushButtonEdit_clicked()
 {
@@ -322,6 +377,19 @@ void ArtistWindow::filterSongs()
     QString searchText = ui->lineSearch->text().trimmed();
     QString selectedGenre = ui->comboGenreFilter->currentText();
     QString selectedYear = ui->comboYearFilter->currentText();
+    QString sortCriteria = ui->comboSort->currentText();
+    if (sortCriteria == "Name")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getSongName() < b.getSongName();
+        });
+    }
+    else if (sortCriteria == "Year")
+    {
+        std::sort(currentSongs.begin(), currentSongs.end(), [](const Song& a, const Song& b) {
+            return a.getReleaseYear() > b.getReleaseYear();
+        });
+    }
     for (const auto& song : currentSongs)
     {
         QString songName = QString::fromStdString(song.getSongName());
@@ -336,3 +404,9 @@ void ArtistWindow::filterSongs()
         }
     }
 }
+void ArtistWindow::on_comboSort_currentIndexChanged(int index)
+{
+    refreshSongList();
+    filterSongs();
+}
+

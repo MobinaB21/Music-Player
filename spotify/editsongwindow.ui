@@ -192,19 +192,6 @@
      <string>New AudioFileName :</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEditAlbumName">
-    <property name="geometry">
-     <rect>
-      <x>52</x>
-      <y>350</y>
-      <width>211</width>
-      <height>26</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(207, 207, 207);</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
@@ -236,6 +223,19 @@ background-color: rgb(207, 207, 207);</string>
     </property>
     <property name="text">
      <string>Change</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>350</y>
+      <width>201</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
     </property>
    </widget>
   </widget>

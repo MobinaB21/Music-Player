@@ -47,3 +47,4 @@ void AddSongWindow::on_pushButton_3_clicked()
     song.save(newSong);
     this->close();
 }
+

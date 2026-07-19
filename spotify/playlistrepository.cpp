@@ -76,10 +76,13 @@ vector<Playlist> PlaylistRepository::playlists(int listenerId)
 }
 void PlaylistRepository::saveToFile(Playlist&input)
 {
-    ofstream file("playlist.txt",ios::out);
+    ofstream file("playlist.txt",ios::out | ios::trunc);
     if(file.is_open())
     {
-        file<<input.getName()<<"&"<<input.getListenerId()<<"&"<<input.getPlaylistId()<<"\n";
+        for(auto&l:list)
+        {
+            file<<l.getName()<<"&"<<l.getListenerId()<<"&"<<l.getPlaylistId()<<"\n";
+        }
     }
     file.close();
 }
@@ -102,8 +105,8 @@ void PlaylistRepository::loadFromFile()
             if (name.empty() || listenerId.empty() || playlistId.empty()) continue;
 
             try {
-                int lId = std::stoi(listenerId);
-                int pId = std::stoi(playlistId);
+                int lId =stoi(listenerId);
+                int pId =stoi(playlistId);
 
                 Playlist temp(name, lId, pId);
                 list.push_back(temp);
