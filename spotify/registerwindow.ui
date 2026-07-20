@@ -88,7 +88,7 @@ background-color: rgb(198,198,198);
      </property>
      <property name="styleSheet">
       <string notr="true">background-color: rgb(221, 255, 231);
-font: 700 italic 18pt &quot;Segoe UI&quot;;</string>
+character</string>
      </property>
      <property name="text">
       <string>Start exploring the world of music</string>
@@ -282,6 +282,22 @@ background-color: rgb(198,198,198);</string>
      </property>
      <property name="text">
       <string>Cancle</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lblPasswordStrength">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>240</y>
+       <width>241</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 700 9pt &quot;Segoe UI&quot;;</string>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

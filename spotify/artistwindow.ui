@@ -45,7 +45,7 @@ background-color: rgb(255, 255, 255);</string>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="albums">
      <attribute name="title">
@@ -692,9 +692,9 @@ background-color: rgb(218, 30, 30);</string>
    <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>10</y>
-      <width>411</width>
+      <width>421</width>
       <height>20</height>
      </rect>
     </property>

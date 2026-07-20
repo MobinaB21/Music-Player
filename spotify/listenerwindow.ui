@@ -31,9 +31,9 @@
    <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>20</y>
-      <width>371</width>
+      <width>361</width>
       <height>20</height>
      </rect>
     </property>
@@ -90,7 +90,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabExplore">
      <attribute name="title">
@@ -518,8 +518,8 @@ background-color: rgb(185, 255, 205);</string>
      <widget class="QPushButton" name="pushButtonEdit">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>510</y>
+        <x>160</x>
+        <y>500</y>
         <width>151</width>
         <height>29</height>
        </rect>
