@@ -49,6 +49,7 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     ListenerRepository tempListener;
     auto listener=tempListener.search(listenerId);
     ui->lblName->setText("Welcom back "+QString::fromStdString(listener.value().getFullName()));
+    player=new PlaybackList(this);
 }
 ListenerWindow::~ListenerWindow()
 {
@@ -671,5 +672,125 @@ void ListenerWindow::on_comboSort_currentIndexChanged(int index)
     {
         on_listWidgetPlaylist_itemClicked(ui->listWidgetPlaylist->currentItem());
     }
+}
+void ListenerWindow::on_pushButtonPlay_clicked()
+{
+    player->play();
+}
+
+
+void ListenerWindow::on_pushButtonPause_clicked()
+{
+    player->pause();
+}
+
+
+void ListenerWindow::on_pushButtonNextSong_clicked()
+{
+    player->next();
+}
+
+
+void ListenerWindow::on_pushButtonPrevious_clicked()
+{
+    player->previous();
+}
+
+
+void ListenerWindow::on_listWidgetPlaylist_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString playlistName=item->text();
+    PlaylistRepository tempPlaylist;
+    int playlistId=tempPlaylist.getIdByName(playlistName.toStdString());
+    SongRepository tempSong;
+    vector<Song>playlistSongs=tempSong.getByPlaylist(playlistId);
+    vector<Song>tempPlaylistSongs;
+    if(playlistName!="Favorites")tempPlaylistSongs=playlistSongs;
+    else if(playlistName=="Favorites")tempPlaylistSongs=tempSong.getByLikedSongs(this->listenerId);
+    if(ui->comboSort->currentText()=="Name")
+    {
+        sort(tempPlaylistSongs.begin(),tempPlaylistSongs.end(),[](Song&a,Song&b)
+             {
+                 return a.getSongName()<b.getSongName();
+             });
+    }
+    else if(ui->comboSort->currentText()=="Year")
+    {
+        sort(tempPlaylistSongs.begin(),tempPlaylistSongs.end(),[](Song&a,Song&b)
+             {
+                 return a.getReleaseYear()>b.getReleaseYear();
+             });
+    }
+    if(tempPlaylistSongs.empty())return;
+    player->loadQueue(tempPlaylistSongs,0);
+    player->play();
+}
+void ListenerWindow::on_listWidgetMusic_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString songName=item->text();
+    SongRepository tempSong;
+    auto song=tempSong.getSongByName(songName.toStdString());
+    if(!song.has_value())return;
+    player->playSong(song.value());
+}
+void ListenerWindow::on_pushButtonPlay_2_clicked()
+{
+    player->play();
+}
+void ListenerWindow::on_pushButtonPause_2_clicked()
+{
+    player->pause();
+}
+void ListenerWindow::on_pushButtonNextSong_2_clicked()
+{
+    player->next();
+}
+void ListenerWindow::on_pushButtonPrevious_2_clicked()
+{
+    player->previous();
+}
+
+
+void ListenerWindow::on_listWidgetAlbums_itemDoubleClicked(QListWidgetItem *item)
+{
+    ArtistRepository tempArtist;
+    QListWidgetItem *selectedArtist=ui->listWidgetArtists->currentItem();
+    QString artist=selectedArtist->text();
+    int artistId=tempArtist.getIdByName(artist.toStdString());
+    QString albumName=item->text();
+    AlbumRepository tempAlbum;
+    int albumId=tempAlbum.getIdByName(albumName.toStdString());
+    SongRepository tempSong;
+    vector<Song>albumSongs=tempSong.getByAlbum(albumId);
+    vector<Song>tempAlbumSongs;
+    if(albumName!="Singles")tempAlbumSongs=albumSongs;
+    else if(albumName=="Singles")tempAlbumSongs=tempSong.singleSong(artistId);
+    if(ui->comboSort->currentText()=="Name")
+    {
+        sort(tempAlbumSongs.begin(),tempAlbumSongs.end(),[](Song&a,Song&b)
+             {
+                 return a.getSongName()<b.getSongName();
+             });
+    }
+    else if(ui->comboSort->currentText()=="Year")
+    {
+        sort(tempAlbumSongs.begin(),tempAlbumSongs.end(),[](Song&a,Song&b)
+             {
+                 return a.getReleaseYear()>b.getReleaseYear();
+             });
+    }
+    if(tempAlbumSongs.empty())return;
+    player->loadQueue(tempAlbumSongs,0);
+    player->play();
+}
+
+
+void ListenerWindow::on_listWidget_3_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString songName=item->text();
+    SongRepository tempSong;
+    auto song=tempSong.getSongByName(songName.toStdString());
+    if(!song.has_value())return;
+    player->playSong(song.value());
 }
 

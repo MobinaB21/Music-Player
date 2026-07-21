@@ -12,10 +12,11 @@ private:
     int songId;
     int artistId;
     int albumId;
+    string filePath;
     string songImage;
 public:
-    Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId);
-
+    Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId,string filePath);
+    Song(){}
     string getSongName()const;
     int getReleaseYear()const;
     string getGenre()const;
@@ -24,6 +25,7 @@ public:
     int getArtistId()const;
     int getAlbumId()const;
     string getSongImage()const;
+    string getFilePath()const;
     void setSongId(int id);
     void setSongImage(const string &songImage);
     void setSongName(string name);
@@ -31,6 +33,7 @@ public:
     void setGenre(string genre);
     void setAudioFileName(string audio);
     void setAlbumId(int id);
+    void setFilePath(string path);
 };
 
 #endif // SONG_H

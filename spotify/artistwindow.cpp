@@ -10,6 +10,7 @@
 #include<QListWidgetItem>
 #include"editalbumwindow.h"
 #include"artistrepository.h"
+
 ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ArtistWindow)
@@ -21,7 +22,7 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     refreshSongList();
     refreshAlbumList();
     ui->comboGenreFilter->addItem("All");
-    ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical"});
+    ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical","Hip Hop"});
     ui->comboYearFilter->addItem("All");
     for(int year=2026;year>=0;year--)
     {
@@ -33,6 +34,7 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     ArtistRepository tempArtist;
     auto artist=tempArtist.search(artistId);
     ui->lblName->setText("Welcom back "+QString::fromStdString(artist.value().getFullName()));
+    player=new PlaybackList(this);
 }
 ArtistWindow::~ArtistWindow()
 {
@@ -408,5 +410,71 @@ void ArtistWindow::on_comboSort_currentIndexChanged(int index)
 {
     refreshSongList();
     filterSongs();
+}
+void ArtistWindow::on_pushButtonPlay_clicked()
+{
+    player->play();
+}
+void ArtistWindow::on_pushButtonPause_clicked()
+{
+    player->pause();
+}
+void ArtistWindow::on_pushButtonNextSong_clicked()
+{
+    player->next();
+}
+void ArtistWindow::on_pushButtonPrevious_clicked()
+{
+    player->previous();
+}
+void ArtistWindow::on_listWidget_2_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString albumName=item->text();
+    AlbumRepository tempAlbum;
+    int albumId=tempAlbum.getIdByName(albumName.toStdString());
+    SongRepository tempSong;
+    vector<Song>albumSongs=tempSong.getByAlbum(albumId);
+    vector<Song>tempAlbumSongs=albumSongs;
+    if(ui->comboSort->currentText()=="Name")
+    {
+        sort(tempAlbumSongs.begin(),tempAlbumSongs.end(),[](Song&a,Song&b)
+        {
+            return a.getSongName()<b.getSongName();
+        });
+    }
+    else if(ui->comboSort->currentText()=="Year")
+    {
+        sort(tempAlbumSongs.begin(),tempAlbumSongs.end(),[](Song&a,Song&b)
+             {
+                 return a.getReleaseYear()>b.getReleaseYear();
+             });
+    }
+    if(tempAlbumSongs.empty())return;
+    player->loadQueue(tempAlbumSongs,0);
+    player->play();
+}
+void ArtistWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString songName=item->text();
+    SongRepository tempSong;
+    auto song=tempSong.getSongByName(songName.toStdString());
+    if(!song.has_value())return;
+    player->playSong(song.value());
+}
+void ArtistWindow::on_pushButtonPlay_2_clicked()
+{
+    player->play();
+}
+void ArtistWindow::on_pushButtonPause_2_clicked()
+{
+    player->pause();
+}
+void ArtistWindow::on_listWidgetSongs_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString songName=item->text();
+    SongRepository tempSong;
+    auto song=tempSong.getSongByName(songName.toStdString());
+    if(!song.has_value())return;
+    player->playSong(song.value());
 }
 

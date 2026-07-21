@@ -3,8 +3,7 @@
 #include"loginwindow.h"
 #include <QWidget>
 #include<QListWidget>
-#include<vector>
-#include"song.h"
+#include"playbacklist.h"
 namespace Ui {
 class ListenerWindow;
 }
@@ -54,10 +53,35 @@ private slots:
 
     void filterMusics();
 
+    void on_pushButtonPlay_clicked();
+
+    void on_pushButtonPause_clicked();
+
+    void on_pushButtonNextSong_clicked();
+
+    void on_pushButtonPrevious_clicked();
+
+    void on_listWidgetPlaylist_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_listWidgetMusic_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_pushButtonPlay_2_clicked();
+
+    void on_pushButtonPause_2_clicked();
+
+    void on_pushButtonNextSong_2_clicked();
+
+    void on_pushButtonPrevious_2_clicked();
+
+    void on_listWidgetAlbums_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_listWidget_3_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::ListenerWindow *ui;
     LoginWindow *login=nullptr;
     int listenerId;
+    PlaybackList *player;
 };
 
 #endif // LISTENERWINDOW_H

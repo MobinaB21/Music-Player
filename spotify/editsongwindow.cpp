@@ -3,6 +3,7 @@
 #include<QMessageBox>
 #include"songrepository.h"
 #include"albumrepository.h"
+#include<QFileDialog>
 EditSongWindow::EditSongWindow(int id,Song target,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::EditSongWindow)
@@ -15,6 +16,7 @@ EditSongWindow::EditSongWindow(int id,Song target,QWidget *parent)
     ui->lineEditYear->setText(QString::number(currentSong.getReleaseYear()));
     ui->lineEditAudio->setText(QString::fromStdString(currentSong.getAudioFile()));
     ui->lineEditGenre->setText(QString::fromStdString(currentSong.getGenre()));
+    ui->lineEditPath->setText(QString::fromStdString(currentSong.getFilePath()));
     AlbumRepository tempAlbum;
     vector<Album>albums=tempAlbum.albums(this->artistId);
     ui->comboBox->addItem("default");
@@ -23,19 +25,18 @@ EditSongWindow::EditSongWindow(int id,Song target,QWidget *parent)
         ui->comboBox->addItem(QString::fromStdString(a.getAlbumName()));
     }
 }
-
 EditSongWindow::~EditSongWindow()
 {
     delete ui;
 }
-
 void EditSongWindow::on_pushButton_clicked()
 {
     QString name =ui->lineEditName->text();
     QString year=ui->lineEditYear->text();
     QString genre=ui->lineEditGenre->text();
     QString audio=ui->lineEditAudio->text();
-    if(name.isEmpty() || year.isEmpty() || genre.isEmpty() || audio.isEmpty())
+    QString filePath=ui->lineEditPath->text();
+    if(name.isEmpty() || year.isEmpty() || genre.isEmpty() || audio.isEmpty() || filePath.isEmpty())
     {
         QMessageBox::warning(this,"Please fill al the lines","warning");
         return;
@@ -55,6 +56,16 @@ void EditSongWindow::on_pushButton_clicked()
     updated.setGenre(genre.toStdString());
     updated.setAudioFileName(audio.toStdString());
     updated.setAlbumId(albumId);
+    updated.setFilePath(filePath.toStdString());
     temp.saveToFile(updated);
     this->close();
 }
+void EditSongWindow::on_pushButtonBrowse_clicked()
+{
+    QString filePath=QFileDialog::getOpenFileName(this,"","All Files (*.*)",nullptr);
+    if(!filePath.isEmpty())
+    {
+        ui->lineEditPath->setText(filePath);
+    }
+}
+

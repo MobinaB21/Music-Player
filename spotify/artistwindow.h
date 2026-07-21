@@ -3,6 +3,7 @@
 #include"loginwindow.h"
 #include <QWidget>
 #include<QListWidget>
+#include"playbacklist.h"
 namespace Ui {
 class ArtistWindow;
 }
@@ -51,10 +52,29 @@ private slots:
 
     void on_comboSort_currentIndexChanged(int index);
 
+    void on_pushButtonNextSong_clicked();
+
+    void on_pushButtonPlay_clicked();
+
+    void on_pushButtonPause_clicked();
+
+    void on_pushButtonPrevious_clicked();
+
+    void on_listWidget_2_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_pushButtonPlay_2_clicked();
+
+    void on_pushButtonPause_2_clicked();
+
+    void on_listWidgetSongs_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::ArtistWindow *ui;
     LoginWindow *login;
     int artistId;
+    PlaybackList *player;
 };
 
 #endif // ARTISTWINDOW_H

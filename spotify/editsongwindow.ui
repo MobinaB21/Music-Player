@@ -195,7 +195,7 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>480</x>
       <y>320</y>
       <width>141</width>
       <height>20</height>
@@ -212,7 +212,7 @@
     <property name="geometry">
      <rect>
       <x>520</x>
-      <y>350</y>
+      <y>420</y>
       <width>171</width>
       <height>29</height>
      </rect>
@@ -228,7 +228,7 @@ background-color: rgb(207, 207, 207);</string>
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>490</x>
       <y>350</y>
       <width>201</width>
       <height>26</height>
@@ -236,6 +236,52 @@ background-color: rgb(207, 207, 207);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEditPath">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>350</y>
+      <width>205</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(207, 207, 207);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>320</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
+    </property>
+    <property name="text">
+     <string>FilePath :</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonBrowse">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>350</y>
+      <width>51</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 700 italic 7pt &quot;Segoe UI&quot;;
+background-color: rgb(207, 207, 207);</string>
+    </property>
+    <property name="text">
+     <string>Browse</string>
     </property>
    </widget>
   </widget>

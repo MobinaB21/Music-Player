@@ -4,6 +4,7 @@
 #include"song.h"
 #include"songrepository.h"
 #include"albumrepository.h"
+#include<QFileDialog>
 AddSongWindow::AddSongWindow(int id,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AddSongWindow)
@@ -11,7 +12,7 @@ AddSongWindow::AddSongWindow(int id,QWidget *parent)
     ui->setupUi(this);
     this->artistId=id;
     setAttribute(Qt::WA_DeleteOnClose);
-     AlbumRepository tempAlbum;
+    AlbumRepository tempAlbum;
     vector<Album>albums=tempAlbum.albums(this->artistId);
     ui->comboBox->addItem("default");
     for(auto&a:albums)
@@ -30,8 +31,9 @@ void AddSongWindow::on_pushButton_3_clicked()
     QString audioFileName=ui->lineAudio->text();
     QString genre=ui->lineGenre->text();
     QString releaseYear=ui->lineReleaseYear->text();
+    QString filePath=ui->linePath->text();
 
-    if(name.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty())
+    if(name.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty() || filePath.isEmpty())
     {
         QMessageBox::warning(this,"Please fill all the lines","warning");
         return;
@@ -42,9 +44,17 @@ void AddSongWindow::on_pushButton_3_clicked()
         QString album=ui->comboBox->currentText();
         albumId=tempAlbum.getIdByName(album.toStdString());
     }
-    Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId);
+    Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId,filePath.toStdString());
     SongRepository song;
     song.save(newSong);
     this->close();
+}
+void AddSongWindow::on_pushButtonBrowse_clicked()
+{
+    QString filePath=QFileDialog::getOpenFileName(this,"selectsong","","All Files (*.*)");
+    if(!filePath.isEmpty())
+    {
+        ui->linePath->setText(filePath);
+    }
 }
 
