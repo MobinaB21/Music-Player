@@ -166,15 +166,14 @@ background-color: rgb(185, 255, 205);</string>
         <widget class="QListWidget" name="listWidgetArtists">
          <property name="styleSheet">
           <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
-border-color: rgb(20, 20, 20);</string>
+</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QListWidget" name="listWidgetAlbums">
          <property name="styleSheet">
-          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
-border-color: rgb(11, 11, 11);</string>
+          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;</string>
          </property>
         </widget>
        </item>
@@ -182,7 +181,7 @@ border-color: rgb(11, 11, 11);</string>
         <widget class="QListWidget" name="listWidget_3">
          <property name="styleSheet">
           <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
-border-color: rgb(13, 13, 13);</string>
+</string>
          </property>
         </widget>
        </item>
