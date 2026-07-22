@@ -18,6 +18,8 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButtonBrowse_clicked();
+
 private:
     Ui::EditAlbumWindow *ui;
     Album currentAlbum;

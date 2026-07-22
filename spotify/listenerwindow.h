@@ -77,6 +77,10 @@ private slots:
 
     void on_listWidget_3_itemDoubleClicked(QListWidgetItem *item);
 
+    void on_lineEditPassword_textChanged(const QString &arg1);
+
+    void on_pushButtonBrowse_clicked();
+
 private:
     Ui::ListenerWindow *ui;
     LoginWindow *login=nullptr;

@@ -98,7 +98,7 @@ void ListenerRepository::saveToFile(const Account&input)
     ofstream file("listener.txt",ios::out);
     if(file.is_open())
     {
-        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
+        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"&"<<input.getProfilePhoto()<<"\n";
     }
     file.close();
 }
@@ -116,7 +116,7 @@ void ListenerRepository::loadFromFile()
             if(line.empty()) continue;
 
             stringstream ss(line);
-            string name, username, biography, id, role, password;
+            string name, username, biography, id, role, password,profile;
 
             if (!getline(ss, name, '&')) continue;
             if (!getline(ss, username, '&')) continue;
@@ -124,10 +124,10 @@ void ListenerRepository::loadFromFile()
             if (!getline(ss, id, '&')) continue;
             if (!getline(ss, role, '&')) continue;
             if (!getline(ss, password, '&')) continue;
-
+            if(!getline(ss,profile,'&'))continue;
             try {
                 int parsedId = stoi(id);
-                Account temp(name, username, biography, parsedId, role, password);
+                Account temp(name, username, biography, parsedId, role, password,profile);
                 listeners.push_back(temp);
                 if(parsedId >= nextId) nextId = parsedId + 1;
             }
@@ -157,7 +157,7 @@ void ListenerRepository::removeFromFile(int id)
     }
     file.close();
 }
-void ListenerRepository::updateListener(int listenerId,string&name,string& newUserName,string& newPassword,string&biography)
+void ListenerRepository::updateListener(int listenerId,string&name,string& newUserName,string& newPassword,string&biography,string profile)
 {
     for(auto& l:listeners)
     {
@@ -167,6 +167,7 @@ void ListenerRepository::updateListener(int listenerId,string&name,string& newUs
             l.setUserName(newUserName);
             l.setPassword(newPassword);
             l.setBiography(biography);
+            l.setProfilePhoto(profile);
             return;
         }
     }

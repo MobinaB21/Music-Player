@@ -15,7 +15,7 @@ private:
     string filePath;
     string songImage;
 public:
-    Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId,string filePath);
+    Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId,string filePath,string songImage);
     Song(){}
     string getSongName()const;
     int getReleaseYear()const;

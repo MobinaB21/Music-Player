@@ -19,21 +19,23 @@
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>290</x>
-     <y>80</y>
+     <x>330</x>
+     <y>120</y>
      <width>891</width>
      <height>661</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 255, 255);</string>
+    <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(17, 17, 17);
+</string>
    </property>
    <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>70</x>
       <y>20</y>
-      <width>361</width>
+      <width>231</width>
       <height>20</height>
      </rect>
     </property>
@@ -163,21 +165,24 @@ background-color: rgb(185, 255, 205);</string>
        <item>
         <widget class="QListWidget" name="listWidgetArtists">
          <property name="styleSheet">
-          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;</string>
+          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
+border-color: rgb(20, 20, 20);</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QListWidget" name="listWidgetAlbums">
          <property name="styleSheet">
-          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;</string>
+          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
+border-color: rgb(11, 11, 11);</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QListWidget" name="listWidget_3">
          <property name="styleSheet">
-          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;</string>
+          <string notr="true">font: 700 italic 12pt &quot;Segoe UI&quot;;
+border-color: rgb(13, 13, 13);</string>
          </property>
         </widget>
        </item>
@@ -200,7 +205,7 @@ background-color: rgb(185, 255, 205);</string>
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>F:/screan shots/Screenshot 2026-07-16 115302.png</normaloff>F:/screan shots/Screenshot 2026-07-16 115302.png</iconset>
+           <normaloff>F:/screan shots/Screenshot 2026-07-22 124921.png</normaloff>F:/screan shots/Screenshot 2026-07-22 124921.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -586,7 +591,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>160</y>
+        <y>140</y>
         <width>151</width>
         <height>20</height>
        </rect>
@@ -602,7 +607,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>190</y>
+        <y>170</y>
         <width>281</width>
         <height>26</height>
        </rect>
@@ -615,7 +620,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>250</y>
+        <y>210</y>
         <width>141</width>
         <height>20</height>
        </rect>
@@ -631,7 +636,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>280</y>
+        <y>240</y>
         <width>281</width>
         <height>26</height>
        </rect>
@@ -647,7 +652,7 @@ background-color: rgb(185, 255, 205);</string>
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>500</y>
+        <y>490</y>
         <width>151</width>
         <height>29</height>
        </rect>
@@ -710,7 +715,7 @@ background-color: rgb(218, 30, 30);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>350</y>
+        <y>280</y>
         <width>111</width>
         <height>20</height>
        </rect>
@@ -726,13 +731,75 @@ background-color: rgb(218, 30, 30);</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>380</y>
+        <y>300</y>
         <width>281</width>
         <height>91</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(207, 207, 207);</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblPasswordStrength">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>240</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 700 italic 10pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>410</y>
+        <width>141</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 700 italic 9pt &quot;Segoe UI&quot;;</string>
+      </property>
+      <property name="text">
+       <string>Set ProfilePhoto :</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditPhoto">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>430</y>
+        <width>205</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(207, 207, 207);</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonBrowse">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>430</y>
+        <width>71</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font: 700 italic 7pt &quot;Segoe UI&quot;;
+background-color: rgb(207, 207, 207);</string>
+      </property>
+      <property name="text">
+       <string>Browse</string>
       </property>
      </widget>
     </widget>
@@ -785,6 +852,19 @@ background-color: rgb(218, 30, 30);</string>
       <string>Year</string>
      </property>
     </item>
+   </widget>
+   <widget class="QLabel" name="lblImage">
+    <property name="geometry">
+     <rect>
+      <x>32</x>
+      <y>9</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
  </widget>

@@ -20,6 +20,8 @@ private slots:
 
     void on_pushButtonBrowse_clicked();
 
+    void on_pushButtonBrowse_2_clicked();
+
 private:
     Ui::AddSongWindow *ui;
     int artistId;

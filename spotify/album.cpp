@@ -1,10 +1,11 @@
 #include "album.h"
 
-Album::Album(string albumName,int albumId,int artistId)
+Album::Album(string albumName,int albumId,int artistId,string cover)
 {
     this->albumName=albumName;
     this->albumId=albumId;
     this->artistId=artistId;
+    this->cover=cover;
 }
 string Album::getAlbumName()const{return albumName;}
 int Album::getAlbumId()const{ return albumId;}

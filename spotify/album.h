@@ -10,7 +10,7 @@ private:
     int artistId;
     string cover;
 public:
-    Album(string albumName,int albumId,int artistId);
+    Album(string albumName,int albumId,int artistId,string cover);
     string getAlbumName()const;
     int getAlbumId()const;
     int getArtistId()const;

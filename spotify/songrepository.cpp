@@ -127,7 +127,7 @@ void SongRepository::saveToFile(const Song&input)
     ofstream file("song.txt",ios::app);
     if(file.is_open())
     {
-        file<<input.getSongName()<<"&"<<input.getReleaseYear()<<"&"<<input.getGenre()<<"&"<<input.getAudioFile()<<"&"<<input.getSongId()<<"&"<<input.getArtistId()<<"&"<<input.getAlbumId()<<"&"<<input.getFilePath()<<"\n";
+        file<<input.getSongName()<<"&"<<input.getReleaseYear()<<"&"<<input.getGenre()<<"&"<<input.getAudioFile()<<"&"<<input.getSongId()<<"&"<<input.getArtistId()<<"&"<<input.getAlbumId()<<"&"<<input.getFilePath()<<"&"<<input.getSongImage()<<"\n";
     }
     file.close();
 }
@@ -141,7 +141,7 @@ void SongRepository::loadFromFile()
         {
             if(line.empty())continue;
             stringstream ss(line);
-            string songName,releaseYear,genre,audioFileName,songId,artistId,albumId,filePath;
+            string songName,releaseYear,genre,audioFileName,songId,artistId,albumId,filePath,songImage;
             getline(ss,songName,'&');
             getline(ss,releaseYear,'&');
             getline(ss,genre,'&');
@@ -150,7 +150,8 @@ void SongRepository::loadFromFile()
             getline(ss,artistId,'&');
             getline(ss,albumId,'&');
             getline(ss,filePath,'&');
-            Song temp(songName,stoi(releaseYear),genre,audioFileName,stoi(songId),stoi(artistId),stoi(albumId),filePath);
+            getline(ss,songImage,'&');
+            Song temp(songName,stoi(releaseYear),genre,audioFileName,stoi(songId),stoi(artistId),stoi(albumId),filePath,songImage);
             songs.push_back(temp);
             if(stoi(songId)>=nextId)nextId=stoi(songId)+1;
         }

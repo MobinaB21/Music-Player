@@ -57,7 +57,7 @@ void AlbumRepository::saveToFile(const Album&input)
     ofstream file("album.txt",ios::app);
     if(file.is_open())
     {
-        file<<input.getAlbumName()<<"&"<<input.getAlbumId()<<"&"<<input.getArtistId()<<"\n";
+        file<<input.getAlbumName()<<"&"<<input.getAlbumId()<<"&"<<input.getArtistId()<<"&"<<input.getCover()<<"\n";
     }
     file.close();
 }
@@ -71,11 +71,12 @@ void AlbumRepository::loadFromFile()
         {
             if(line.empty())continue;
             stringstream ss(line);
-            string albumName,artistId,albumId;
+            string albumName,artistId,albumId,cover;
             getline(ss,albumName,'&');
             getline(ss,albumId,'&');
             getline(ss,artistId,'&');
-            Album temp(albumName,stoi(albumId),stoi(artistId));
+            getline(ss,cover,'&');
+            Album temp(albumName,stoi(albumId),stoi(artistId),cover);
             albumList.push_back(temp);
             if(stoi(albumId)>=nextId)nextId=stoi(albumId)+1;
         }

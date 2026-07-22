@@ -1,6 +1,6 @@
 #include "song.h"
 
-Song::Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId,string filePath)
+Song::Song(string songName,int releaseYear,string genre,string audioFileName,int songId,int artistId,int albumId,string filePath,string songImage)
 {
     this->songName=songName;
     this->releaseYear=releaseYear;
@@ -10,6 +10,7 @@ Song::Song(string songName,int releaseYear,string genre,string audioFileName,int
     this->artistId=artistId;
     this->albumId=albumId;
     this->filePath=filePath;
+    this->songImage=songImage;
 }
 string Song::getSongName()const{return songName;}
 int Song::getReleaseYear()const{return releaseYear;}

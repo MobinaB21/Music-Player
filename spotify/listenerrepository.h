@@ -20,7 +20,7 @@ public:
     void saveToFile(const Account&input)override;
     void loadFromFile()override;
     void removeFromFile(int id);
-    void updateListener(int listenerId,string&name,string& newUserName,string& newPassword,string &biograghy);
+    void updateListener(int listenerId,string&name,string& newUserName,string& newPassword,string &biograghy,string profile);
     ~ListenerRepository()override;
 };
 

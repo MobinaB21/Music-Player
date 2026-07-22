@@ -8,6 +8,7 @@
 #include<QInputDialog>
 #include<algorithm>
 #include"listenerrepository.h"
+#include<QFileDialog>
 ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ListenerWindow)
@@ -15,8 +16,8 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
 {
     ui->setupUi(this);
     ui->comboGenreFilter->addItem("All");
-     ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical"});
-     ui->comboYearFilter->addItem("All");
+    ui->comboGenreFilter->addItems({"Pop", "Rock", "Rap", "Jazz", "Classical","Hip Hop"});
+    ui->comboYearFilter->addItem("All");
     for(int year=2026;year>=0;year--)
     {
          ui->comboYearFilter->addItem(QString::number(year));
@@ -48,6 +49,10 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     connect(ui->listWidgetAlbums, &QListWidget::itemClicked, this, &ListenerWindow::on_listWidgetAlbums_itemClicked);
     ListenerRepository tempListener;
     auto listener=tempListener.search(listenerId);
+    ui->lblImage->setFixedSize(30,30);
+    QString profilePhoto=QString::fromStdString(listener.value().getProfilePhoto());
+    QPixmap pixmap(profilePhoto);
+    ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     ui->lblName->setText("Welcom back "+QString::fromStdString(listener.value().getFullName()));
     player=new PlaybackList(this);
 }
@@ -63,7 +68,10 @@ void ListenerWindow::loadArtists()
     vector<Account>allArtists=artist.getArtists();
     for(auto&a:allArtists)
     {
-        QListWidgetItem *item=new QListWidgetItem(QString::fromStdString(a.getFullName()));
+        QSize iconSize(70,70);
+        ui->listWidgetArtists->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(a.getProfilePhoto());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(a.getFullName()));
         ui->listWidgetArtists->addItem(item);
     }
     ui->listWidgetArtists->sortItems(Qt::AscendingOrder);
@@ -73,7 +81,11 @@ void ListenerWindow::loadPlaylists()
     ui->listWidgetPlaylist->clear();
     PlaylistRepository playlistRepo;
     vector<Playlist>allPlaylists=playlistRepo.playlists(this->listenerId);
-    ui->listWidgetPlaylist->addItem("Favorites");
+    QSize iconSize(70,70);
+    ui->listWidgetPlaylist->setIconSize(iconSize);
+    QString coverPath="F:/screan shots/Screenshot 2026-07-22 124921.png";
+    QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString("Favorites"));
+    ui->listWidgetPlaylist->addItem(item);
     sort(allPlaylists.begin(), allPlaylists.end(), [](const Playlist& a, const Playlist& b) {
         string name1 = a.getName();
         string name2 = b.getName();
@@ -83,7 +95,11 @@ void ListenerWindow::loadPlaylists()
     });
     for(auto&a:allPlaylists)
     {
-        ui->listWidgetPlaylist->addItem(QString::fromStdString(a.getName()));
+        QSize iconSize(70,70);
+        ui->listWidgetPlaylist->setIconSize(iconSize);
+        QString coverPath="F:/screan shots/photo28667259506.jpg";
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(a.getName()));
+        ui->listWidgetPlaylist->addItem(item);
     }
 }
 void ListenerWindow::on_pushButtonLike_clicked()
@@ -220,11 +236,21 @@ void ListenerWindow::on_listWidgetArtists_itemClicked(QListWidgetItem *item)
     }
     SongRepository song;
     vector<Song>singleSongs=song.singleSong(artistId);
-    if(!singleSongs.empty())albumNames.push_back("Singles");
     for(auto& a:albumNames)
     {
-        ui->listWidgetAlbums->addItem(QString::fromStdString(a));
+        int albumId=album.getIdByName(a);
+        auto realAlbum=album.search(albumId);
+        QSize iconSize(70,70);
+        ui->listWidgetAlbums->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(realAlbum.value().getCover());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(a));
+        ui->listWidgetAlbums->addItem(item);
     }
+    QSize iconSize(70,70);
+    ui->listWidgetAlbums->setIconSize(iconSize);
+    QString coverPath="F:/screan shots/Screenshot 2026-07-21 190410.png";
+    QListWidgetItem *singleSong=new QListWidgetItem(QIcon(coverPath),"Singles");
+    ui->listWidgetAlbums->addItem(singleSong);
      ui->listWidgetAlbums->sortItems(Qt::AscendingOrder);
 }
 void ListenerWindow::on_listWidgetAlbums_itemClicked(QListWidgetItem *item)
@@ -250,7 +276,11 @@ void ListenerWindow::on_listWidgetAlbums_itemClicked(QListWidgetItem *item)
     }
     for(auto&s:songs)
     {
-        ui->listWidget_3->addItem(QString::fromStdString(s.getSongName()));
+        QSize iconSize(70,70);
+        ui->listWidget_3->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(s.getSongImage());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(s.getSongName()));
+        ui->listWidget_3->addItem(item);
     }
 }
 void ListenerWindow::on_pushButtonAddPlaylist_clicked()
@@ -359,7 +389,11 @@ void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
         }
         for(auto&a:allSongs)
         {
-            ui->listWidgetMusic->addItem(QString::fromStdString(a.getSongName()));
+            QSize iconSize(70,70);
+            ui->listWidgetMusic->setIconSize(iconSize);
+            QString coverPath=QString::fromStdString(a.getSongImage());
+            QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(a.getSongName()));
+            ui->listWidgetMusic->addItem(item);
         }
         return;
     }
@@ -393,7 +427,11 @@ void ListenerWindow::on_listWidgetPlaylist_itemClicked(QListWidgetItem *item)
     }
     for(auto&s:allSongs)
     {
-        ui->listWidgetMusic->addItem(QString::fromStdString(s.getSongName()));
+        QSize iconSize(70,70);
+        ui->listWidgetMusic->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(s.getSongImage());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(s.getSongName()));
+        ui->listWidgetMusic->addItem(item);
     }
 }
 void ListenerWindow::on_pushButtonDeleteMusic_clicked()
@@ -469,6 +507,7 @@ void ListenerWindow::on_pushButtonEdit_clicked()
     QString userName=ui->lineEditUsername->text();
     QString password=ui->lineEditPassword->text();
     QString biography=ui->textEdit->toPlainText();
+    QString photo=ui->lineEditPhoto->text();
     string name2=name.toStdString();
     string userName2=userName.toStdString();
     string password2=password.toStdString();
@@ -479,13 +518,24 @@ void ListenerWindow::on_pushButtonEdit_clicked()
         QMessageBox::warning(this,"Error","Please fill the lines");
         return;
     }
+    if(name.contains("&") || userName.contains("&") || password.contains("&") || biography.contains("&"))
+    {
+        QMessageBox::warning(this,"Invalid character","You cant use character '&' ");
+        return;
+    }
+    if(ui->lblPasswordStrength->text().contains("Weak"))
+    {
+        QMessageBox::warning(this,"warning","Password must contain at least 12 characters long and including at least one uppercase letter, one lowercase letter,one digit and one special charecter");
+        return ;
+    }
+    if(photo.isEmpty())photo="F:/screan shots/Screenshot 2026-07-21 204414.png";
     auto find=temp.searchByUserName(userName2);
-    if(find)
+    if(find && find.value().getId()!=listenerId)
     {
         QMessageBox::critical(this,"warning","This username was selected before");
         return;
     }
-    temp.updateListener(this->listenerId,name2,userName2,password2,biography2);
+    temp.updateListener(this->listenerId,name2,userName2,password2,biography2,photo.toStdString());
     auto it=temp.search(this->listenerId);
     temp.saveToFile(it.value());
     QMessageBox::information(this,"Success","Account updated successfully");
@@ -593,7 +643,9 @@ void ListenerWindow::filterSongs()
         bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
         if (matchesSearch && matchesGenre && matchesYear)
         {
-            ui->listWidget_3->addItem(songName);
+            QString coverPath=QString::fromStdString(song.getSongImage());
+            QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(song.getSongName()));
+            ui->listWidget_3->addItem(item);
         }
     }
 }
@@ -656,7 +708,11 @@ void ListenerWindow::filterMusics()
         bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
         if (matchesSearch && matchesGenre && matchesYear)
         {
-            ui->listWidgetMusic->addItem(songName);
+            QSize iconSize(70,70);
+            ui->listWidgetArtists->setIconSize(iconSize);
+            QString coverPath=QString::fromStdString(song.getSongImage());
+            QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(song.getSongName()));
+            ui->listWidgetMusic->addItem(item);
         }
     }
 }
@@ -794,3 +850,40 @@ void ListenerWindow::on_listWidget_3_itemDoubleClicked(QListWidgetItem *item)
     player->playSong(song.value());
 }
 
+
+void ListenerWindow::on_lineEditPassword_textChanged(const QString &password)
+{
+    if(password.isEmpty())
+    {
+        ui->lblPasswordStrength->setText("");
+        return;
+    }
+    bool hasLower=password.contains(QRegularExpression("[a-z]"));
+    bool hasUpper=password.contains(QRegularExpression("[A-Z]"));
+    bool hasDigit=password.contains(QRegularExpression("[0-9]"));
+    bool hasSpecial=password.contains(QRegularExpression("[^a-zA-Z0-9]"));
+    bool hasAll= hasLower && hasUpper && hasDigit && hasSpecial;
+    if(password.length()>=12 && hasAll)
+    {
+        ui->lblPasswordStrength->setText("Strong password");
+        ui->lblPasswordStrength->setStyleSheet("color: #2ecc71; font-weight: bold;");
+    }
+    else if(password.length()>=6 && hasAll)
+    {
+        ui->lblPasswordStrength->setText("Medium password");
+        ui->lblPasswordStrength->setStyleSheet("color: #f39c12; font-weight: bold;");
+    }
+    else
+    {
+        ui->lblPasswordStrength->setText("Weak password");
+        ui->lblPasswordStrength->setStyleSheet("color: #e74c3c; font-weight: bold;");
+    }
+}
+void ListenerWindow::on_pushButtonBrowse_clicked()
+{
+    QString fileCover=QFileDialog::getOpenFileName(this,"selectsong","","All Files (*.*)");
+    if(!fileCover.isEmpty())
+    {
+        ui->lineEditPhoto->setText(fileCover);
+    }
+}

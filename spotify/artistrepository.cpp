@@ -61,10 +61,12 @@ optional<Account> ArtistRepository::searchByName(string &name)
 }
 void ArtistRepository::saveToFile(const Account&input)
 {
-    ofstream file("artist.txt",ios::out);
+    ofstream file("artist.txt",ios::out | ios::trunc);
     if(file.is_open())
-    {
-        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"\n";
+    {for(auto&a:artists)
+        {
+            file<<a.getFullName()<<"&"<<a.getUserName()<<"&"<<a.getBiography()<<"&"<<a.getId()<<"&"<<a.getRole()<<"&"<<a.getPassword()<<"&"<<a.getProfilePhoto()<<"\n";
+        }
     }
     file.close();
 }
@@ -76,13 +78,10 @@ void ArtistRepository::loadFromFile()
         string line;
         while(getline(file,line))
         {
-            if(!line.empty() && line.back() == '\r') {
-                line.pop_back();
-            }
             if(line.empty()) continue;
 
             stringstream ss(line);
-            string name, username, biography, id, role, password;
+            string name, username, biography, id, role, password,profilePhoto;
 
             if (!getline(ss, name, '&')) continue;
             if (!getline(ss, username, '&')) continue;
@@ -90,10 +89,11 @@ void ArtistRepository::loadFromFile()
             if (!getline(ss, id, '&')) continue;
             if (!getline(ss, role, '&')) continue;
             if (!getline(ss, password, '&')) continue;
+            if(!getline(ss,profilePhoto,'&'))continue;
             try
             {
                 int parsedId = stoi(id);
-                Account temp(name, username, biography, parsedId, role, password);
+                Account temp(name, username, biography, parsedId, role, password,profilePhoto);
                 artists.push_back(temp);
                 if(parsedId >= nextId) nextId = parsedId + 1;
             }
@@ -131,7 +131,7 @@ int ArtistRepository::getIdByName(string name)
     }
     return 0;
 }
-void ArtistRepository::updateArtist(int listenerId,string&name,string& newUserName,string& newPassword,string&biography)
+void ArtistRepository::updateArtist(int listenerId,string&name,string& newUserName,string& newPassword,string&biography,string profile)
 {
     for(auto& a:artists)
     {
@@ -141,6 +141,7 @@ void ArtistRepository::updateArtist(int listenerId,string&name,string& newUserNa
             a.setUserName(newUserName);
             a.setPassword(newPassword);
             a.setBiography(biography);
+            a.setProfilePhoto(profile);
             return;
         }
     }

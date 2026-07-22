@@ -22,6 +22,8 @@ private slots:
 
     void on_lineEditPassword_textChanged(const QString &arg1);
 
+    void on_pushButtonBrowse_clicked();
+
 private:
     Ui::RegisterWindow *ui;
 };

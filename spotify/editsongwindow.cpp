@@ -17,6 +17,7 @@ EditSongWindow::EditSongWindow(int id,Song target,QWidget *parent)
     ui->lineEditAudio->setText(QString::fromStdString(currentSong.getAudioFile()));
     ui->lineEditGenre->setText(QString::fromStdString(currentSong.getGenre()));
     ui->lineEditPath->setText(QString::fromStdString(currentSong.getFilePath()));
+    ui->lineEditPathImage->setText(QString::fromStdString(currentSong.getSongImage()));
     AlbumRepository tempAlbum;
     vector<Album>albums=tempAlbum.albums(this->artistId);
     ui->comboBox->addItem("default");
@@ -36,6 +37,7 @@ void EditSongWindow::on_pushButton_clicked()
     QString genre=ui->lineEditGenre->text();
     QString audio=ui->lineEditAudio->text();
     QString filePath=ui->lineEditPath->text();
+    QString songImage=ui->lineEditPathImage->text();
     if(name.isEmpty() || year.isEmpty() || genre.isEmpty() || audio.isEmpty() || filePath.isEmpty())
     {
         QMessageBox::warning(this,"Please fill al the lines","warning");
@@ -48,6 +50,7 @@ void EditSongWindow::on_pushButton_clicked()
         QString album=ui->comboBox->currentText();
         albumId=tempAlbum.getIdByName(album.toStdString());
     }
+    if(songImage.isEmpty())songImage="F:/screan shots/Screenshot 2026-07-21 185330.png";
     SongRepository temp;
     temp.removeFromFile(currentSong);
     Song updated=currentSong;
@@ -57,15 +60,24 @@ void EditSongWindow::on_pushButton_clicked()
     updated.setAudioFileName(audio.toStdString());
     updated.setAlbumId(albumId);
     updated.setFilePath(filePath.toStdString());
+    updated.setSongImage(songImage.toStdString());
     temp.saveToFile(updated);
     this->close();
 }
 void EditSongWindow::on_pushButtonBrowse_clicked()
 {
-    QString filePath=QFileDialog::getOpenFileName(this,"","All Files (*.*)",nullptr);
+    QString filePath=QFileDialog::getOpenFileName(this,"selecteSong","","All Files (*.*)");
     if(!filePath.isEmpty())
     {
         ui->lineEditPath->setText(filePath);
+    }
+}
+void EditSongWindow::on_pushButtonBrowse_2_clicked()
+{
+    QString fileCover=QFileDialog::getOpenFileName(this,"selectCover","","All Files (*.*)");
+    if(!fileCover.isEmpty())
+    {
+        ui->lineEditPathImage->setText(fileCover);
     }
 }
 

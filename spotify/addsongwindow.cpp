@@ -32,10 +32,11 @@ void AddSongWindow::on_pushButton_3_clicked()
     QString genre=ui->lineGenre->text();
     QString releaseYear=ui->lineReleaseYear->text();
     QString filePath=ui->linePath->text();
+    QString songCover=ui->lineSongCover->text();
 
     if(name.isEmpty()||audioFileName.isEmpty()||genre.isEmpty()||releaseYear.isEmpty() || filePath.isEmpty())
     {
-        QMessageBox::warning(this,"Please fill all the lines","warning");
+        QMessageBox::warning(this,"warning","Please fill all the lines");
         return;
     }
     int albumId=0;
@@ -44,7 +45,8 @@ void AddSongWindow::on_pushButton_3_clicked()
         QString album=ui->comboBox->currentText();
         albumId=tempAlbum.getIdByName(album.toStdString());
     }
-    Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId,filePath.toStdString());
+    if(songCover.isEmpty())songCover="F:/screan shots/Screenshot 2026-07-21 185330.png";
+    Song newSong(name.toStdString(),releaseYear.toInt(),genre.toStdString(),audioFileName.toStdString(),0,this->artistId,albumId,filePath.toStdString(),songCover.toStdString());
     SongRepository song;
     song.save(newSong);
     this->close();
@@ -55,6 +57,14 @@ void AddSongWindow::on_pushButtonBrowse_clicked()
     if(!filePath.isEmpty())
     {
         ui->linePath->setText(filePath);
+    }
+}
+void AddSongWindow::on_pushButtonBrowse_2_clicked()
+{
+    QString fileCover=QFileDialog::getOpenFileName(this,"selectCover","","All Files (*.*)");
+    if(!fileCover.isEmpty())
+    {
+        ui->lineSongCover->setText(fileCover);
     }
 }
 

@@ -10,7 +10,7 @@
 #include<QListWidgetItem>
 #include"editalbumwindow.h"
 #include"artistrepository.h"
-
+#include<QFileDialog>
 ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ArtistWindow)
@@ -33,6 +33,10 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     connect(ui->comboYearFilter, &QComboBox::currentTextChanged, this, &ArtistWindow::filterSongs);
     ArtistRepository tempArtist;
     auto artist=tempArtist.search(artistId);
+    ui->lblImage->setFixedSize(30,30);
+    QString profilePhoto=QString::fromStdString(artist.value().getProfilePhoto());
+    QPixmap pixmap(profilePhoto);
+    ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     ui->lblName->setText("Welcom back "+QString::fromStdString(artist.value().getFullName()));
     player=new PlaybackList(this);
 }
@@ -114,7 +118,11 @@ void ArtistWindow::refreshAlbumList()
     vector<Album> albums = temp.albums(this->artistId);
     for(auto& a : albums)
     {
-        ui->listWidget_2->addItem(QString::fromStdString(a.getAlbumName()));
+        QSize iconSize(70,70);
+        ui->listWidget_2->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(a.getCover());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(a.getAlbumName()));
+        ui->listWidget_2->addItem(item);
     }
     ui->listWidget_2->sortItems(Qt::AscendingOrder);
 }
@@ -138,7 +146,11 @@ void ArtistWindow::refreshSongsOfAlbum(int albumId)
     }
     for(auto&s:songs)
     {
-        ui->listWidget->addItem(QString::fromStdString(s.getSongName()));
+        QSize iconSize(70,70);
+        ui->listWidget->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(s.getSongImage());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(s.getSongName()));
+        ui->listWidget->addItem(item);
     }
 }
 void ArtistWindow::on_buttonAddmusic_clicked()
@@ -219,7 +231,11 @@ void ArtistWindow::refreshSongList()
     }
     for(const auto& song : songs)
     {
-        ui->listWidgetSongs->addItem(QString::fromStdString(song.getSongName()));
+        QSize iconSize(70,70);
+        ui->listWidgetSongs->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(song.getSongImage());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(song.getSongName()));
+        ui->listWidgetSongs->addItem(item);
     }
 }
 void ArtistWindow::on_buttonLogout_clicked()
@@ -253,9 +269,11 @@ void ArtistWindow::on_listWidget_2_itemClicked(QListWidgetItem *item)
     }
     for(const auto& song : songs)
     {
-        QListWidgetItem *songItem = new QListWidgetItem(QString::fromStdString(song.getSongName()));
-        songItem->setForeground(Qt::black);
-        ui->listWidget->addItem(songItem);
+        QSize iconSize(70,70);
+        ui->listWidget->setIconSize(iconSize);
+        QString coverPath=QString::fromStdString(song.getSongImage());
+        QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(song.getSongName()));
+        ui->listWidget->addItem(item);
     }
 }
 void ArtistWindow::on_pushButton_clicked()
@@ -318,6 +336,7 @@ void ArtistWindow::on_pushButtonEdit_clicked()
     QString userName=ui->lineEditUsername->text();
     QString password=ui->lineEditPassword->text();
     QString biography=ui->textEdit->toPlainText();
+    QString profilePhoto=ui->lineEditPhoto->text();
     string name2=name.toStdString();
     string userName2=userName.toStdString();
     string password2=password.toStdString();
@@ -328,13 +347,24 @@ void ArtistWindow::on_pushButtonEdit_clicked()
         QMessageBox::warning(this,"Error","Please fill the lines");
         return;
     }
+    if(name.contains("&") || userName.contains("&") || password.contains("&") || biography.contains("&"))
+    {
+        QMessageBox::warning(this,"Invalid character","You cant use character '&' ");
+        return;
+    }
+    if(ui->lblPasswordStrength->text().contains("Weak"))
+    {
+        QMessageBox::warning(this,"warning","Password must contain at least 12 characters long and including at least one uppercase letter, one lowercase letter,one digit and one special charecter");
+        return ;
+    }
     auto find=temp.searchByUserName(userName2);
-    if(find)
+    if(find && find.value().getId()!=artistId)
     {
         QMessageBox::critical(this,"warning","This username was selected before");
         return;
     }
-    temp.updateArtist(this->artistId,name2,userName2,password2,biography2);
+    if(profilePhoto.isEmpty())profilePhoto="F:/screan shots/Screenshot 2026-07-21 204414.png";
+    temp.updateArtist(this->artistId,name2,userName2,password2,biography2,profilePhoto.toStdString());
     auto it=temp.search(this->artistId);
     temp.saveToFile(it.value());
     QMessageBox::information(this,"Success","Account updated successfully");
@@ -402,7 +432,11 @@ void ArtistWindow::filterSongs()
         bool matchesYear = (selectedYear == "All" || songYear == selectedYear);
         if (matchesSearch && matchesGenre && matchesYear)
         {
-            ui->listWidgetSearch->addItem(songName);
+            QSize iconSize(70,70);
+            ui->listWidgetSearch->setIconSize(iconSize);
+            QString coverPath=QString::fromStdString(song.getSongImage());
+            QListWidgetItem *item=new QListWidgetItem(QIcon(coverPath),QString::fromStdString(song.getSongName()));
+            ui->listWidgetSearch->addItem(item);
         }
     }
 }
@@ -477,4 +511,39 @@ void ArtistWindow::on_listWidgetSongs_itemDoubleClicked(QListWidgetItem *item)
     if(!song.has_value())return;
     player->playSong(song.value());
 }
-
+void ArtistWindow::on_lineEditPassword_textChanged(const QString &password)
+{
+    if(password.isEmpty())
+    {
+        ui->lblPasswordStrength->setText("");
+        return;
+    }
+    bool hasLower=password.contains(QRegularExpression("[a-z]"));
+    bool hasUpper=password.contains(QRegularExpression("[A-Z]"));
+    bool hasDigit=password.contains(QRegularExpression("[0-9]"));
+    bool hasSpecial=password.contains(QRegularExpression("[^a-zA-Z0-9]"));
+    bool hasAll= hasLower && hasUpper && hasDigit && hasSpecial;
+    if(password.length()>=12 && hasAll)
+    {
+        ui->lblPasswordStrength->setText("Strong password");
+        ui->lblPasswordStrength->setStyleSheet("color: #2ecc71; font-weight: bold;");
+    }
+    else if(password.length()>=6 && hasAll)
+    {
+        ui->lblPasswordStrength->setText("Medium password");
+        ui->lblPasswordStrength->setStyleSheet("color: #f39c12; font-weight: bold;");
+    }
+    else
+    {
+        ui->lblPasswordStrength->setText("Weak password");
+        ui->lblPasswordStrength->setStyleSheet("color: #e74c3c; font-weight: bold;");
+    }
+}
+void ArtistWindow::on_pushButtonBrowse_clicked()
+{
+    QString fileCover=QFileDialog::getOpenFileName(this,"selectsong","","All Files (*.*)");
+    if(!fileCover.isEmpty())
+    {
+        ui->lineEditPhoto->setText(fileCover);
+    }
+}

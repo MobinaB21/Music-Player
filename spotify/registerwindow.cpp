@@ -5,6 +5,7 @@
 #include"listenerrepository.h"
 #include"loginwindow.h"
 #include<QRegularExpression>
+#include<QFileDialog>
 RegisterWindow::RegisterWindow(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::RegisterWindow)
@@ -22,6 +23,7 @@ void RegisterWindow::on_pushButtonOK_clicked()
     QString username=ui->lineEditUserName->text();
     QString password=ui->lineEditPassword->text();
     QString biography=ui->textEdit->toPlainText();
+    QString profilePhoto=ui->lineEditPhoto->text();
     QString role=ui->radioButtonArtist->isChecked()? "Artist":"Listener";
     if(name.isEmpty() || username.isEmpty() || password.isEmpty())
     {
@@ -38,6 +40,7 @@ void RegisterWindow::on_pushButtonOK_clicked()
         QMessageBox::warning(this,"warning","Password must contain at least 12 characters long and including at least one uppercase letter, one lowercase letter,one digit and one special charecter");
         return ;
     }
+    if(profilePhoto.isEmpty())profilePhoto="F:/screan shots/Screenshot 2026-07-21 204414.png";
      ArtistRepository artist;
     ListenerRepository listener;
      if(artist.searchByUserName(username.toStdString())||listener.searchByUserName(username.toStdString()))
@@ -45,7 +48,7 @@ void RegisterWindow::on_pushButtonOK_clicked()
         QMessageBox::critical(this,"warning","This username was selected before");
         return;
      }
-    Account account(name.toStdString(),username.toStdString(),biography.toStdString(),0,role.toStdString(),password.toStdString());
+    Account account(name.toStdString(),username.toStdString(),biography.toStdString(),0,role.toStdString(),password.toStdString(),profilePhoto.toStdString());
     if(role=="Artist")artist.save(account);
     else listener.save(account);
     QMessageBox::information(this,"Register","Successfully added");
@@ -89,3 +92,12 @@ void RegisterWindow::on_lineEditPassword_textChanged(const QString &password)
         ui->lblPasswordStrength->setStyleSheet("color: #e74c3c; font-weight: bold;");
     }
 }
+void RegisterWindow::on_pushButtonBrowse_clicked()
+{
+    QString fileCover=QFileDialog::getOpenFileName(this,"selectsong","","All Files (*.*)");
+    if(!fileCover.isEmpty())
+    {
+        ui->lineEditPhoto->setText(fileCover);
+    }
+}
+
