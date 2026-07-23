@@ -63,7 +63,8 @@ void ArtistRepository::saveToFile(const Account&input)
 {
     ofstream file("artist.txt",ios::out | ios::trunc);
     if(file.is_open())
-    {for(auto&a:artists)
+    {
+        for(auto&a:artists)
         {
             file<<a.getFullName()<<"&"<<a.getUserName()<<"&"<<a.getBiography()<<"&"<<a.getId()<<"&"<<a.getRole()<<"&"<<a.getPassword()<<"&"<<a.getProfilePhoto()<<"\n";
         }

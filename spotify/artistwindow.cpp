@@ -39,6 +39,13 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     ui->lblName->setText("Welcom back "+QString::fromStdString(artist.value().getFullName()));
     player=new PlaybackList(this);
+    ArtistRepository temp;
+    auto currentUser=temp.search(this->artistId);
+    ui->lineEditName->setText(QString::fromStdString(currentUser.value().getFullName()));
+    ui->lineEditUsername->setText(QString::fromStdString(currentUser.value().getUserName()));
+    ui->lineEditPassword->setText(QString::fromStdString(currentUser.value().getPassword()));
+    ui->textEdit->setText(QString::fromStdString(currentUser.value().getBiography()));
+    ui->lineEditPhoto->setText(QString::fromStdString(currentUser.value().getProfilePhoto()));
 }
 ArtistWindow::~ArtistWindow()
 {
@@ -332,6 +339,7 @@ void ArtistWindow::on_pushButton_2_clicked()
 }
 void ArtistWindow::on_pushButtonEdit_clicked()
 {
+    ArtistRepository temp;
     QString name=ui->lineEditName->text();
     QString userName=ui->lineEditUsername->text();
     QString password=ui->lineEditPassword->text();
@@ -341,7 +349,6 @@ void ArtistWindow::on_pushButtonEdit_clicked()
     string userName2=userName.toStdString();
     string password2=password.toStdString();
     string biography2=biography.toStdString();
-    ArtistRepository temp;
     if(userName.isEmpty() || password.isEmpty() || name.isEmpty() || biography.isEmpty() )
     {
         QMessageBox::warning(this,"Error","Please fill the lines");
@@ -367,6 +374,12 @@ void ArtistWindow::on_pushButtonEdit_clicked()
     temp.updateArtist(this->artistId,name2,userName2,password2,biography2,profilePhoto.toStdString());
     auto it=temp.search(this->artistId);
     temp.saveToFile(it.value());
+    ArtistRepository tempArtist;
+    auto artist=tempArtist.search(artistId);
+    ui->lblImage->setFixedSize(30,30);
+    QString photo=QString::fromStdString(artist.value().getProfilePhoto());
+    QPixmap pixmap(photo);
+    ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     QMessageBox::information(this,"Success","Account updated successfully");
 }
 void ArtistWindow::on_pushButtonDelete_2_clicked()

@@ -55,6 +55,14 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     ui->lblName->setText("Welcom back "+QString::fromStdString(listener.value().getFullName()));
     player=new PlaybackList(this);
+
+    ListenerRepository temp;
+    auto currentUser=temp.search(this->listenerId);
+    ui->lineEditName->setText(QString::fromStdString(currentUser.value().getFullName()));
+    ui->lineEditUsername->setText(QString::fromStdString(currentUser.value().getUserName()));
+    ui->lineEditPassword->setText(QString::fromStdString(currentUser.value().getPassword()));
+    ui->textEdit->setText(QString::fromStdString(currentUser.value().getBiography()));
+    ui->lineEditPhoto->setText(QString::fromStdString(currentUser.value().getProfilePhoto()));
 }
 ListenerWindow::~ListenerWindow()
 {
@@ -251,16 +259,29 @@ void ListenerWindow::on_listWidgetArtists_itemClicked(QListWidgetItem *item)
     QString coverPath="F:/screan shots/Screenshot 2026-07-21 190410.png";
     QListWidgetItem *singleSong=new QListWidgetItem(QIcon(coverPath),"Singles");
     ui->listWidgetAlbums->addItem(singleSong);
-     ui->listWidgetAlbums->sortItems(Qt::AscendingOrder);
+    ui->listWidgetAlbums->sortItems(Qt::AscendingOrder);
+    singleSongs.clear();
 }
 void ListenerWindow::on_listWidgetAlbums_itemClicked(QListWidgetItem *item)
 {
     ui->listWidget_3->clear();
     string albumName=item->text().toStdString();
-    AlbumRepository album;
-    int albumId=album.getIdByName(albumName);
-    SongRepository temp;
-    vector<Song> songs=temp.getByAlbum(albumId);
+    vector<Song> songs;
+    if(albumName=="Singles")
+    {
+        QString artistName=ui->listWidgetArtists->currentItem()->text();
+        ArtistRepository tempArtist;
+        int artistId=tempArtist.getIdByName(artistName.toStdString());
+        SongRepository tempSong;
+        songs=tempSong.singleSong(artistId);
+    }
+    else
+    {
+        AlbumRepository album;
+        int albumId=album.getIdByName(albumName);
+        SongRepository temp;
+        songs=temp.getByAlbum(albumId);
+    }
     QString sortCriteria = ui->comboSort->currentText();
     if (sortCriteria == "Name")
     {
@@ -503,6 +524,7 @@ void ListenerWindow::on_pushButtonDeleteMusic_clicked()
 }
 void ListenerWindow::on_pushButtonEdit_clicked()
 {
+    ListenerRepository temp;
     QString name=ui->lineEditName->text();
     QString userName=ui->lineEditUsername->text();
     QString password=ui->lineEditPassword->text();
@@ -512,7 +534,6 @@ void ListenerWindow::on_pushButtonEdit_clicked()
     string userName2=userName.toStdString();
     string password2=password.toStdString();
     string biography2=biography.toStdString();
-    ListenerRepository temp;
     if(userName.isEmpty() || password.isEmpty() || name.isEmpty() || biography.isEmpty() )
     {
         QMessageBox::warning(this,"Error","Please fill the lines");
@@ -538,6 +559,12 @@ void ListenerWindow::on_pushButtonEdit_clicked()
     temp.updateListener(this->listenerId,name2,userName2,password2,biography2,photo.toStdString());
     auto it=temp.search(this->listenerId);
     temp.saveToFile(it.value());
+    ListenerRepository tempListener;
+    auto listener=tempListener.search(listenerId);
+    ui->lblImage->setFixedSize(30,30);
+    QString profilePhoto=QString::fromStdString(listener.value().getProfilePhoto());
+    QPixmap pixmap(profilePhoto);
+    ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
     QMessageBox::information(this,"Success","Account updated successfully");
 }
 void ListenerWindow::on_pushButtonDelete_2_clicked()
