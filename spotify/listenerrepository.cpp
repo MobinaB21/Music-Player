@@ -95,10 +95,14 @@ void ListenerRepository::updateLiked(int listenerId,int songId,bool isLiked)
 }
 void ListenerRepository::saveToFile(const Account&input)
 {
-    ofstream file("listener.txt",ios::out);
+    ofstream file("listener.txt",ios::out | ios::trunc);
     if(file.is_open())
     {
-        file<<input.getFullName()<<"&"<<input.getUserName()<<"&"<<input.getBiography()<<"&"<<input.getId()<<"&"<<input.getRole()<<"&"<<input.getPassword()<<"&"<<input.getProfilePhoto()<<"\n";
+        for(auto&l:listeners)
+        {
+            file<<l.getFullName()<<"&"<<l.getUserName()<<"&"<<l.getBiography()<<"&"<<l.getId()<<"&"<<l.getRole()<<"&"<<l.getPassword()<<"&"<<l.getProfilePhoto()<<"\n";
+        }
+
     }
     file.close();
 }
@@ -110,9 +114,6 @@ void ListenerRepository::loadFromFile()
         string line;
         while(getline(file,line))
         {
-            if(!line.empty() && line.back() == '\r') {
-                line.pop_back();
-            }
             if(line.empty()) continue;
 
             stringstream ss(line);

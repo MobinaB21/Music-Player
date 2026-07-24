@@ -66,7 +66,7 @@ void EditSongWindow::on_pushButton_clicked()
 }
 void EditSongWindow::on_pushButtonBrowse_clicked()
 {
-    QString filePath=QFileDialog::getOpenFileName(this,"selecteSong","","All Files (*.*)");
+    QString filePath=QFileDialog::getOpenFileName(this,"Select Song","","All Files (*.*)");
     if(!filePath.isEmpty())
     {
         ui->lineEditPath->setText(filePath);
@@ -74,7 +74,7 @@ void EditSongWindow::on_pushButtonBrowse_clicked()
 }
 void EditSongWindow::on_pushButtonBrowse_2_clicked()
 {
-    QString fileCover=QFileDialog::getOpenFileName(this,"selectCover","","All Files (*.*)");
+    QString fileCover=QFileDialog::getOpenFileName(this,"Select Cover","","All Files (*.*)");
     if(!fileCover.isEmpty())
     {
         ui->lineEditPathImage->setText(fileCover);
