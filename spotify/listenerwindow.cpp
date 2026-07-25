@@ -53,7 +53,7 @@ ListenerWindow::ListenerWindow(int listenerId,QWidget *parent)
     QString profilePhoto=QString::fromStdString(listener.value().getProfilePhoto());
     QPixmap pixmap(profilePhoto);
     ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
-    ui->lblName->setText("Welcom back "+QString::fromStdString(listener.value().getFullName()));
+    ui->lblName->setText("Welcome back "+QString::fromStdString(listener.value().getFullName()));
     player=new PlaybackList(this);
 
     ListenerRepository temp;

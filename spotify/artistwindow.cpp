@@ -37,7 +37,7 @@ ArtistWindow::ArtistWindow(int artistId,QWidget *parent)
     QString profilePhoto=QString::fromStdString(artist.value().getProfilePhoto());
     QPixmap pixmap(profilePhoto);
     ui->lblImage->setPixmap(pixmap.scaled(ui->lblImage->size(),Qt::KeepAspectRatio,Qt::SmoothTransformation));
-    ui->lblName->setText("Welcom back "+QString::fromStdString(artist.value().getFullName()));
+    ui->lblName->setText("Welcome back "+QString::fromStdString(artist.value().getFullName()));
     player=new PlaybackList(this);
     ArtistRepository temp;
     auto currentUser=temp.search(this->artistId);
